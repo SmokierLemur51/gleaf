@@ -1,13 +1,16 @@
 package routes
 
 import (
+	"github.com/SmokierLemur51/gleaf/handlers"
 
 	"github.com/go-chi/chi/v5"
 )
 
 
 func ConfigureRoutes(router *chi.Mux) {
-	router.Get("/", IndexHandler)
-	router.Get("/about-us", AboutHandler)
+	router.Get("/", handlers.IndexHandler)
+	router.Get("/about", handlers.AboutHandler)
+	router.Get("/contact", handlers.ContactHandler)
+	router.Get("/register", handlers.RegisterHandler)
 }
 

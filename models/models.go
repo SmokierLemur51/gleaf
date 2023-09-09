@@ -1,12 +1,27 @@
 package models 
 
-
 type PageData struct {
-	Page 	string
-	Title	string
-	Message string
+	Page 		string
+	Title		string
+	UserHash 	[]byte
+	Message 	string
+	Services    []Service
 }
 
+type Service struct {
+	ID			int16
+	Type_ID		int16
+	Type 		string
+	Description string
+	Cost 		float32
+}
+
+type User struct {
+	ID int16
+	Username string
+	Password string
+
+}
 type ContactRequest struct {
 	ID int16
 	ContactInfo []ContactInfo

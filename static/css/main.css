@@ -19,3 +19,8 @@
 .card {
 	flex: 1 1 0;
 }
+
+.mission-statement {
+	font-family: "Arial", sans-serif;
+	font-style: italic;
+}
