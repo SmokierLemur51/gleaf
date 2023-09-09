@@ -21,14 +21,15 @@ func AddTable(db *sql.DB, tableName string, sqlStatement string) {
 	fmt.Printf("\t*    Table '%s' created successfully/\r\n", tableName)
 }
 
+
+
+
+
 func GetValueByColumn(db *sql.DB, returnColumn, tableName, searchColumn, value string) (interface{}, error) {
 	// this func is used to return a value (ex the id) of an item in the table
 	// by providing the name you know it as ... if that makes sense
-
 	query := fmt.Sprintf("SELECT %s FROM %s WHERE %s = ?", returnColumn, tableName, searchColumn)
-	
 	var result interface {}
-	
 	err := db.QueryRow(query, value).Scan(&result)
 	if err != nil {
 		if err == sql.ErrNoRows {
@@ -38,6 +39,39 @@ func GetValueByColumn(db *sql.DB, returnColumn, tableName, searchColumn, value s
 	}
 	return result, nil
 }
+
+
+func Get_ID_From_Table_Col_Value(db *sql.DB, tableName, searchColumn, searchValue string) (int, err) {
+	var result int
+	query := fmt.Sprintf("SELECT id FROM %s WHERE %s = ?", tableName, searchColumn)
+	err := db.Exec(query, searchValue).Scan(&result)
+	if err == sql.ErrNoRows {
+		// does not exist
+		return -1, fmt.Errorf("No value found in table '%s' when searching column '%s' for value '%s'", tableName, searchColumn, searchValue)
+	} else if err != nil {
+		// error executing query
+		return -1, err
+	}
+	return result, nil
+}
+
+
+func GetContactID(db *sql.DB, phone, email) (int, err) {
+	// this one could definitely be used to improve the other
+	queryOne := fmt.Sprintf("SELECT id FROM contacts WHERE phone_number = ? AND email = ? LIMIT 1")
+	var contact_id int
+	err := db.QueryRow(queryOne, phone, email).Scan(&contact_id)
+	if err == sql.ErrNoRows {
+		// not matching contact found
+		return -1, fmt.Errorf("No contact found where both '%s' & '%s' exist.", phone, email)
+	} else if err != nil {
+		// error occurred executing query
+		return -1, err
+	}
+	// return contact id of matching information
+	return contact_id, nil
+}
+
 
 func CreateDevelopmentTables(db *sql.DB) {
 	// create service categories table
@@ -86,6 +120,8 @@ func CreateDevelopmentTables(db *sql.DB) {
 			username TEXT,
 			pass_hash TEXT,
 			contact_id INTEGER,
+			phone_number TEXT,
+			email TEXT,
 			address_id INTEGER,
 			FOREIGN KEY (contact_id) REFERENCES contacts(id),
 			FOREIGN KEY (address_id) REFERENCES addresses(id),
@@ -160,8 +196,11 @@ func CreateDevelopmentTables(db *sql.DB) {
 	fmt.Println("\n\n\n\n\t*    Success creating database tables.")
 }
 
+
+
 // 
 //	Functions to populate to each table () 
+//		These should be updated to return errors to prevent crashing
 //
 func InsertServiceCategory(db *sql.DB, name, description string) {
 	insertServiceCategorySQL := "INSERT INTO service_categories (name, description) VALUES (?, ?)"
@@ -172,8 +211,13 @@ func InsertServiceCategory(db *sql.DB, name, description string) {
 	fmt.Println("\t*    Successfully inserted into 'services_categories' table\r\n")
 }
 
+
+
 func InsertService(db *sql.DB, category, name, description string, cost float32) {
-	category_id := GetValueByColumn(db, "id", "service_categories", "name", category)
+	category_id, err := GetValueByColumn(db, "id", "service_categories", "name", category)
+	if err != nil {
+		panic(err)
+	}
 	insertServiceSQL := "INSERT INTO services (category_id, name, description, cost) VALUES (?, ?, ?)"
 	_, err := db.Exec(insertServiceSQL, category_id, name, description, cost)
 	if err != nil {
@@ -181,6 +225,8 @@ func InsertService(db *sql.DB, category, name, description string, cost float32)
 	}
 	fmt.Println("\t*    Successfully inserted into 'services' table\r\n")	
 }
+
+
 
 func InsertAddress(db *sql.DB, street, city, state, zip string) {
 	insertAddressSQL := "INSERT INTO addresses (street, city, state, zip) VALUES (?, ?, ?, ?)"
@@ -191,13 +237,49 @@ func InsertAddress(db *sql.DB, street, city, state, zip string) {
 	fmt.Println("\t*    Successfully inserted into 'addresses' table\r\n")	
 }
 
-func InsertContact(db *sql.DB, ) {
-	user_id := GetValueByColumn(db, "id", "users", "name", name)
+
+
+func InsertContact(db *sql.DB, username, name, email, phone string) {
+	user_id, err := GetValueByColumn(db, "id", "contacts", "name", name)
 	insertContactSQL := "INSERT INTO contacts (user_id, name, email, phone) VALUES (?, ?, ?, ?)"
+	_, err := db.Exec(insertContactSQL, user_id, name, email, phone)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Println("\t*    Successfully inserted into 'contacts' table\r\n")	
 
 }
 
-func InsertUser(db *sql.DB) {}
+
+
+func InsertUser(db *sql.DB, username, password, email, phone, street string) {
+	address_id, err := GetValueByColumn(db, "id", "addresses", "street", street)
+	if err != nil {
+		panic(err)
+	}
+	contact_id_email, err := GetValueByColumn(db, "id", "contacts", "email", email)
+	if err != nil {
+		panic(err)
+	}
+	contact_id_phone, err := Get
+
+	insertUserSQL := "INSERT INTO users (username, pass_hash, contact_id, phone_number, email, address_id) VALUES (?, ?, ?, ?, ?, ?)"
+	_, err := db.Exec(insertUserSQL, username, pass_hash, contact_id, email, phone, address_id)
+}
+
+
+`
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
+			username TEXT,
+			pass_hash TEXT,
+			contact_id INTEGER,
+			phone_number TEXT,
+			email TEXT,
+			address_id INTEGER,
+			FOREIGN KEY (contact_id) REFERENCES contacts(id),
+			FOREIGN KEY (address_id) REFERENCES addresses(id),
+`
+
 func InsertGroup(db *sql.DB) {}
 func InsertGroupMember(db *sql.DB) {}
 func InsertBooking(db *sql.DB) {}

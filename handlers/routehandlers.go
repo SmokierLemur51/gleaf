@@ -34,6 +34,7 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 
+
 func AboutHandler(w http.ResponseWriter, r *http.Request) {
 	page := models.PageData{
 		Page: "about.html",
@@ -63,13 +64,36 @@ func ContactHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-func ContactHandler(w http.ResponseWriter, r *http.Request) {
+func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	page := models.PageData{
 		Page: "register.html",
 		Title: "Greenleaf Cleaning",
 		Message: MISSION_STATEMENT,
 		UserHash: utils.GenerateHash("test"),
 	}
+	err := utils.RenderTemplate(w, page)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
+// testing pages
+// temp comparison
+func ComparisonHandler(w http.ResponseWriter, r *http.Request) {
+	tempUser := models.User{
+		ID: 1,
+		Username: "SmokierLemur51",
+		Password: "password",
+	}
+
+	page := models.PageData{
+		Page: "comparison.html",
+		Title: "Greenleaf Cleaning",
+		Message: MISSION_STATEMENT,
+		UserHash: utils.GenerateHash(tempUser.Username),
+	}
+
 	err := utils.RenderTemplate(w, page)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
