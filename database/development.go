@@ -41,7 +41,7 @@ func GetValueByColumn(db *sql.DB, returnColumn, tableName, searchColumn, value s
 }
 
 
-func Get_ID_From_Table_Col_Value(db *sql.DB, tableName, searchColumn, searchValue string) (int, err) {
+func GetIDFromTableColValue(db *sql.DB, tableName, searchColumn, searchValue string) (int, err) {
 	var result int
 	query := fmt.Sprintf("SELECT id FROM %s WHERE %s = ?", tableName, searchColumn)
 	err := db.Exec(query, searchValue).Scan(&result)

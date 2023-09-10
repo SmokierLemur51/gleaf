@@ -88,7 +88,7 @@ func ComparisonHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	page := models.PageData{
-		Page: "comparison.html",
+		Page: "testing/index_comparison.html",
 		Title: "Greenleaf Cleaning",
 		Message: MISSION_STATEMENT,
 		UserHash: utils.GenerateHash(tempUser.Username),
