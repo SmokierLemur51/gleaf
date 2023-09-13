@@ -24,7 +24,7 @@ func AddTable(db *sql.DB, tableName string, sqlStatement string) {
 
 
 
-
+// this does not need to be an interface, an int would be better
 func GetValueByColumn(db *sql.DB, returnColumn, tableName, searchColumn, value string) (interface{}, error) {
 	// this func is used to return a value (ex the id) of an item in the table
 	// by providing the name you know it as ... if that makes sense
@@ -58,17 +58,17 @@ func GetIDFromTableColValue(db *sql.DB, tableName, searchColumn, searchValue str
 
 func GetContactID(db *sql.DB, phone, email) (int, err) {
 	// this one could definitely be used to improve the other
-	queryOne := fmt.Sprintf("SELECT id FROM contacts WHERE phone_number = ? AND email = ? LIMIT 1")
+	query := fmt.Sprintf("SELECT id FROM contacts WHERE phone_number = ? AND email = ? LIMIT 1")
 	var contact_id int
-	err := db.QueryRow(queryOne, phone, email).Scan(&contact_id)
+	err := db.QueryRow(query, phone, email).Scan(&contact_id)
 	if err == sql.ErrNoRows {
-		// not matching contact found
-		return -1, fmt.Errorf("No contact found where both '%s' & '%s' exist.", phone, email)
+		// not matching contact found, time to create a new one ...
+		fmt.Errorf("No contact found where both '%s' & '%s' exist.", phone, email)
+		return -1, nil
 	} else if err != nil {
-		// error occurred executing query
-		return -1, err
+		return -2, err
 	}
-	// return contact id of matching information
+	// contact id found, return int
 	return contact_id, nil
 }
 
@@ -240,7 +240,16 @@ func InsertAddress(db *sql.DB, street, city, state, zip string) {
 
 
 func InsertContact(db *sql.DB, username, name, email, phone string) {
-	user_id, err := GetValueByColumn(db, "id", "contacts", "name", name)
+	// if username is not empty, find user_id
+	if username != "" || username != nil {
+		user_id, err := GetValueByColumn(db, "id", "contacts", "name", name)
+		if err != nil {
+			panic(err)
+		}
+	} else {
+		// if username is empty, user_id is null because og does not exist
+		user_id = "NULL"
+	}
 	insertContactSQL := "INSERT INTO contacts (user_id, name, email, phone) VALUES (?, ?, ?, ?)"
 	_, err := db.Exec(insertContactSQL, user_id, name, email, phone)
 		if err != nil {
@@ -252,16 +261,9 @@ func InsertContact(db *sql.DB, username, name, email, phone string) {
 
 
 
-func InsertUser(db *sql.DB, username, password, email, phone, street string) {
-	address_id, err := GetValueByColumn(db, "id", "addresses", "street", street)
-	if err != nil {
-		panic(err)
-	}
-	contact_id_email, err := GetValueByColumn(db, "id", "contacts", "email", email)
-	if err != nil {
-		panic(err)
-	}
-	contact_id_phone, err := Get
+func InsertUser(db *sql.DB, username, password, name, email, phone, street string) {
+	if 
+	
 
 	insertUserSQL := "INSERT INTO users (username, pass_hash, contact_id, phone_number, email, address_id) VALUES (?, ?, ?, ?, ?, ?)"
 	_, err := db.Exec(insertUserSQL, username, pass_hash, contact_id, email, phone, address_id)
