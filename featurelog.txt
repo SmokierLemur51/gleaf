@@ -1,0 +1,19 @@
+this wonderful file is for adding features
+
+
+database package {
+	
+	1 - If contact_id does not already exist, create it first so that contacts are always in a table of their own.
+
+}
+
+
+administrative package {
+	
+	1 - Color code types of bookings so I know what I am getting into
+
+	2 - Links to google calendar
+
+	3 - 
+
+}

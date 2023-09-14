@@ -1,0 +1,25 @@
+This file is where I will put things that need to get got and be fixed tf up
+
+
+~ database package {
+	1)  Rather than checking if the username is "", why not just have the client send
+		if they are logged in or not?
+
+	2)  If some contact information exists but does not match. Something could be better about this for sure.
+
+	3)  Same as 2 but with address information
+
+	4)  Am I hashing the password at the proper time?
+
+	5)  Remove interface and replace it with int
+}
+
+
+~ models {
+	1)  Redesign all models to match database tables
+	2)  Create methods for payment struct for payment processing
+}
+
+~ utils  {
+	1 - Remove fmt, no need to print to terminal.
+}

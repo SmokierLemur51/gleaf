@@ -1,4 +1,9 @@
 package models 
+import (
+	"time"
+)
+
+// FIXLOG 1
 
 type PageData struct {
 	Page 		string
@@ -43,6 +48,15 @@ type Address struct {
 	Zip		  string
 }
 
+type PaymentInformation struct {
+	PaymentID 		int
+	Total 			float32
+	GroupDiscount 	float32
+	Discount 		float32
+	Paid 			bool
+	PaymentDate     time.Time
+}
+// FIXLOG 2
 
 
 
