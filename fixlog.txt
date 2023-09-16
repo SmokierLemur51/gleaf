@@ -12,6 +12,10 @@ This file is where I will put things that need to get got and be fixed tf up
 	4)  Am I hashing the password at the proper time?
 
 	5)  Remove interface and replace it with int
+
+	6)  Create logic to insert user into group
+
+	7)  Create contact_requests table, as well as contact_requests_completed
 }
 
 

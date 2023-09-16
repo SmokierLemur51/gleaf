@@ -48,6 +48,12 @@ type Address struct {
 	Zip		  string
 }
 
+type CurrentUser struct {
+	ID 			int
+	GroupID   	int
+	
+}
+
 type PaymentInformation struct {
 	PaymentID 		int
 	Total 			float32

@@ -250,13 +250,42 @@ func InsertGroup(db *sql.DB, groupName, creatorUsername string) {
 }
 
 
-func InsertGroupMember(db *sql.DB) {}
+func InsertGroupMember(db *sql.DB) {
 
-func InsertBooking(db *sql.DB, createDate, requestedDate, cancelDate, completeDate time.Time, serviceID, groupID int, paymentInfo models.PaymentInformation) {
-	// working here
 }
 
 
+func InsertBooking(db *sql.DB, createDate, requestedDate, cancelDate, completeDate time.Time, userInformation models.CurrentUser,serviceID, 
+										groupID int, paymentInfo models.PaymentInformation,) {
+	
+}
+
+	// createBookingsTableSQL := `
+	// 	CREATE TABLE IF NOT EXISTS bookings (
+	// 		id INTEGER PRIMARY KEY,
+	// 		service_id INTEGER,
+	// 		user_id INTEGER,
+	// 		address_id INTEGER,
+	// 		contact_id INTEGER
+	// 		created_at DATE,
+	// 		requested_date DATE,
+	// 		completed BOOLEAN,
+	// 		completed_date DATE,
+	// 		cancelled BOOLEAN,
+	// 		cancelled_date DATE,
+	// 		cancel_id INTEGER,
+	// 		paid BOOLEAN,
+	// 		payment_id INTEGER,
+	// 		group_cleaning BOOL,
+	// 		group_id INTEGER,
+	// 		FOREIGN KEY (user_id) REFERENCES users(id),
+	// 		FOREIGN KEY (address_id) REFERENCES addresses(id),
+	// 		FOREIGN KEY (contact_id) REFERENCES contacts(id),
+	// 		FOREIGN KEY (cancel_id) REFERENCES cancel(id),
+	// 		FOREIGN KEY (payment_id) REFERENCES payments(id),
+	// 		FOREIGN KEY (group_id) REFERENCES groups(id),
+	// 	);
+	// `
 
 
 func InsertCancelledBooking(db *sql.DB) {}
