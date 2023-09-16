@@ -20,3 +20,8 @@ func RenderTemplate(w http.ResponseWriter, data models.PageData) error {
 }
 
 
+func CheckErr(err error) {
+	if err != nil {
+		panic(err)
+	}
+}

@@ -1,5 +1,9 @@
 This file is where I will put things that need to get got and be fixed tf up
 
+~ routes {
+	1)  Look into using https://github.com/go-chi/cors package to control requests and http headers.
+		Maybe this is how to force https instead of http.
+}
 
 ~ database package {
 	1)  Rather than checking if the username is "", why not just have the client send
