@@ -26,8 +26,8 @@ func InitConn() {
 	utils.CheckErr(err)
 
 	fmt.Println("\tDatabase connection successful!\r\n\n")
-	fmt.Println("\tAttempting to create tables...\r\n\n")
-	CreateGleafTables(db)
+
+	
 }
 
 

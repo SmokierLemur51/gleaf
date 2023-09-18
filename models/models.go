@@ -13,6 +13,12 @@ type PageData struct {
 	Services    []Service
 }
 
+type ServiceCategory struct {
+	ID 			int 	`db:"id"`
+	Name 		string  `db:"name"`
+	Description string  `db:"description"`
+}
+
 type Service struct {
 	ID			int16
 	Type_ID		int16

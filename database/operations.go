@@ -4,7 +4,7 @@ import (
 	"database/sql"
 	"fmt"
 	// "time"
-    // "log"
+    "log"
 
     // "github.com/SmokierLemur51/gleaf/utils"
 	_ "github.com/lib/pq"
@@ -13,12 +13,42 @@ import (
 // panic(err) needs to be removed and we need to add actual
 // error handling in its place
 
-func AddTable(db *sql.DB, tableName, sqlStatement string) {
+func AddTable(db *sql.DB, tableName, sqlStatement string) error {
+
 	_, err := db.Exec(sqlStatement)
 	if err != nil {
-		panic(err)
+		return err
 	}
 	fmt.Printf("\t*    Table '%s' created successfully\r\n", tableName)
+	return err
+}
+
+
+func InsertServiceCategory(db *sql.DB, name, description string) {
+	// create service categories table
+	createServiceCategoriesTableSQL := `
+		CREATE TABLE IF NOT EXISTS service_categories (
+			id SERIAL PRIMARY KEY,
+			name VARCHAR (50) NOT NULL,
+			description VARCHAR (150) NOT NULL
+		)
+	`
+	_, err := db.Exec(createServiceCategoriesTableSQL)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	query := "INSERT INTO service_categories (name, description) VALUES	($1, $2);"
+	_, err = db.Exec(query, name, description)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer db.Close()
+} 
+
+func LoadServiceCategory(db *sql.DB, name) {
+	query := "SELECT name FROM service_categories WHERE name = $1;"
+	// here, start adding logic to load into struct ... 
 }
 
 
@@ -129,7 +159,9 @@ func CreateGleafTables(db *sql.DB) {
         );
     `
 	// AddTable(db, "service_categories", createServiceCategoriesTableSQL)
-	AddTable(db, "services", createServicesTableSQL)
+	if err := AddTable(db, "services", createServicesTableSQL); err != nil{
+		log.Fatal(err)
+	}
 	AddTable(db, "addresses", createAddressesTableSQL)
 	AddTable(db, "contacts", createContactsTableSQL)
 	AddTable(db, "users", createUsersTableSQL)
@@ -139,5 +171,6 @@ func CreateGleafTables(db *sql.DB) {
 	AddTable(db, "cancelled_bookings", createCancelledBookingsTableSQL)
 	AddTable(db, "completed_bookings", createCompletedBookingsTableSQL)
 
-	fmt.Println("\n\n\n\n\t*    Success creating database tables.")
+	fmt.Println("\n\n\n\n\t*    Success creating database tables.\r\n\n")
+	db.Close()
 }
