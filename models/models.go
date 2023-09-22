@@ -13,6 +13,12 @@ type PageData struct {
 	Services    []Service
 }
 
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  * * * * * * * 
+// * * * * * * * * * * * * * * * Service Related  * * * * * * * * * * * * * * * * 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  * * * * * * * 
+
+
 type ServiceCategory struct {
 	ID 			int 	`db:"id"`
 	Name 		string  `db:"name"`
@@ -20,12 +26,20 @@ type ServiceCategory struct {
 }
 
 type Service struct {
-	ID			int16
-	Type_ID		int16
-	Type 		string
-	Description string
-	Cost 		float32
+	ID			 int 	   	`db:"id"`
+	Type_ID		 int 		`db:"category_id"`
+	CategoryName string
+	Name 	  	 string  	`db:"name"`
+	Description  string		`db:"description"`
+	Cost 		 float32 	`db:"cost"`
+	Status       bool 		`db:"status"`
 }
+
+
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  * * * * * * * 
+// * * * * * * * * * * * * * * * Contact Related  * * * * * * * * * * * * * * * * 
+// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  * * * * * * * 
+
 
 type User struct {
 	ID int16
@@ -33,6 +47,7 @@ type User struct {
 	Password string
 
 }
+
 type ContactRequest struct {
 	ID int16
 	ContactInfo []ContactInfo

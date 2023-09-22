@@ -27,7 +27,6 @@ func InitConn() {
 
 	fmt.Println("\tDatabase connection successful!\r\n\n")
 
-	
 }
 
 
