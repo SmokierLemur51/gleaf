@@ -51,7 +51,7 @@ func LoadServiceCategory(db *sql.DB, searchQuery string) (models.ServiceCategory
 }
 
 
-func LoadAllServiceCategories(db *sql.DB) {
+func LoadAllServiceCategories(db *sql.DB) ([]models.ServiceCategory, error){
 	var ServiceCategoryResults []models.ServiceCategory
 	query := "select id, name, description from service_categories;"
 	rows, err := db.Query(query)
@@ -64,7 +64,6 @@ func LoadAllServiceCategories(db *sql.DB) {
 		var category models.ServiceCategory
 		if err := rows.Scan(&category.ID, &category.Name, &category.Description); err != nil {
 			fmt.Println("Error scanning row.")
-			return
 		}
 		ServiceCategoryResults = append(ServiceCategoryResults, category)
 	}
@@ -73,9 +72,7 @@ func LoadAllServiceCategories(db *sql.DB) {
 		fmt.Println("Error iterating over rows: ", err)
 	}
 
-	for _, category := range ServiceCategoryResults {
-		fmt.Printf("\n\t*\tID: %d\tService: %s\n\t\tDescription: %s\r\n\n", category.ID, category.Name, category.Description)
-	}
+	return ServiceCategoryResults, nil
 }
 
 
@@ -107,9 +104,15 @@ func InsertService(db *sql.DB, categoryName, name, description string, cost floa
 	}
 }
 
+// func UpdateServicePrice(db *sql.DB, serviceName string, newCost float32) error {
+// 	query := "update services set cost = $1 where name = $2;"	
+
+// 	return nil 
+// }
 
 
-func LoadActiveServices(db *sql.DB, serviceCategories []models.ServiceCategory) ([]models.Service, []models.Service, error) {
+
+func LoadActiveServices(db *sql.DB, serviceCategories []models.ServiceCategory) ([]models.Service, error) {
 	var ActiveServices []models.Service
 	query := "select * from services where status = true"
 	rows, err := db.Query(query)

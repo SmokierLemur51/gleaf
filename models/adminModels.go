@@ -1,6 +1,6 @@
 package models
 
-type AdministrativePageData struct {
+type AdminPageData struct {
 	Page 				string
 	Title   			string
 	ServiceCategories   []ServiceCategory

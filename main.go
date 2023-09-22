@@ -42,7 +42,7 @@ func main() {
 	r.Handle("/static/*", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
 
 	routes.ConfigureRoutes(r)
-	database.LoadAllServiceCategories(db)
+	
 
 	log.Println("Starting server on port ", PORT)
 	http.ListenAndServe(PORT, r)
