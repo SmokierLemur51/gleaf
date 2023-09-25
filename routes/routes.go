@@ -16,7 +16,7 @@ func ConfigureRoutes(router *chi.Mux) {
 	router.Get("/comparison", handlers.ComparisonHandler)
 
 	// ** admin pages **
-	router.Get("/admin", handlers.AdminIndexHandler)
+	// router.Get("/admin", handlers.AdminIndexHandler)
 
 }
 

@@ -7,8 +7,9 @@ import (
 	"database/sql"
 
 	"github.com/go-chi/chi/v5"
-	"github.com/SmokierLemur51/gleaf/database"
+	// "github.com/SmokierLemur51/gleaf/database"
 	"github.com/SmokierLemur51/gleaf/routes"
+	_ "github.com/lib/pq"
 )
 
 const (
@@ -21,6 +22,7 @@ const (
 )
 
 var db *sql.DB
+
 
 func init() {
 	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)

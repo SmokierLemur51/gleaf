@@ -128,7 +128,7 @@ func LoadActiveServices(db *sql.DB, serviceCategories []models.ServiceCategory) 
 			if err != nil {
 				fmt.Println("Error scanning row: ", err)
 			}
-			for category := range serviceCategories {
+			for _, category := range serviceCategories {
 				if item.Type_ID == category.ID {
 					item.CategoryName = category.Name
 					break
@@ -139,6 +139,11 @@ func LoadActiveServices(db *sql.DB, serviceCategories []models.ServiceCategory) 
 	}
 
 	return ActiveServices, nil
+}
+
+
+func ChangeServiceStatus(db *sql.DB, serviceName string, status bool) {
+	return
 }
 
 // type Service struct {
