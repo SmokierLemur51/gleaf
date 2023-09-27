@@ -110,6 +110,27 @@ func InsertService(db *sql.DB, categoryName, name, description string, cost floa
 // 	return nil 
 // }
 
+func SearchDBForService(db *sql.DB, serviceName string) (models.Service, error) {
+	var service models.Service 
+	query := "select id, category_id, name, description, cost from services where name = $1;"
+	rows, err := db.QueryRow(query, serviceName)
+	if err != nil {
+		return service, err
+	}
+	defer rows.Close()
+
+
+	return service, nil  	
+}
+
+
+func AlterServiceStatus(db *sql.DB, unalteredService, alteredService models.Service) error {
+	var service models.Service
+	query := 
+
+	return service, nil
+}
+
 
 
 func LoadActiveServices(db *sql.DB, serviceCategories []models.ServiceCategory) ([]models.Service, error) {
