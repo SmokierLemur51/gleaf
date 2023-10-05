@@ -51,6 +51,7 @@ func LoadServiceCategory(db *sql.DB, searchQuery string) (models.ServiceCategory
 }
 
 
+
 func LoadAllServiceCategories(db *sql.DB) ([]models.ServiceCategory, error){
 	var ServiceCategoryResults []models.ServiceCategory
 	query := "select id, name, description from service_categories;"
@@ -68,7 +69,11 @@ func LoadAllServiceCategories(db *sql.DB) ([]models.ServiceCategory, error){
 		ServiceCategoryResults = append(ServiceCategoryResults, category)
 	}
 
-	if err := rows.Err(); err != nil {
+	err = rows.Err()
+	if err != nil {
+		if err == sql.ErrNoRows {
+			fmt.Println("No services found.")
+		}
 		fmt.Println("Error iterating over rows: ", err)
 	}
 
@@ -84,24 +89,24 @@ func LoadAllServiceCategories(db *sql.DB) ([]models.ServiceCategory, error){
 
 
 
-func InsertService(db *sql.DB, categoryName, name, description string, cost float32, status bool) {
+func InsertService(db *sql.DB, categoryName, name, description string, cost float32, status bool) (error) {
 	var category models.ServiceCategory
 	var err error
 	category, err = LoadServiceCategory(db, categoryName)
 	if err != nil {
-		return
+		return err
 	}
 	insertStmt, err := db.Prepare("insert into services (category_id, name, description, cost, status) values ($1, $2, $3, $4, $5);")
 	if err != nil {
-		fmt.Println(err)
-		return
+		return err
 	}
 	defer insertStmt.Close()
 
 	_, err = insertStmt.Exec(category.ID, name, description, cost, status)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
+	return nil 	
 }
 
 // func UpdateServicePrice(db *sql.DB, serviceName string, newCost float32) error {
@@ -112,25 +117,60 @@ func InsertService(db *sql.DB, categoryName, name, description string, cost floa
 
 func SearchDBForService(db *sql.DB, serviceName string) (models.Service, error) {
 	var service models.Service 
-	query := "select id, category_id, name, description, cost from services where name = $1;"
-	rows, err := db.QueryRow(query, serviceName)
-	if err != nil {
-		return service, err
-	}
-	defer rows.Close()
+// 	query := "select id, category_id, name, description, cost from services where name = $1;"
+// 	rows, err := db.QueryRow(query, serviceName)
+// 	if err != nil {
+// 		return service, err
+// 	}
+// 	defer rows.Close()
 
-
-	return service, nil  	
-}
-
-
-func AlterServiceStatus(db *sql.DB, unalteredService, alteredService models.Service) error {
-	var service models.Service
-	query := 
 
 	return service, nil
 }
 
+
+func AlterServiceStatus(db *sql.DB, unalteredService, alteredService models.Service) (models.Service, error) {
+	var service models.Service
+	// query := 
+
+	return service, nil
+}
+
+func LoadAllServices(db *sql.DB) ([]models.Service, error) {
+	stmt := "select id, category_id, name, description, cost, status from services;"
+	rows, err := db.Query(stmt)
+	if err != nil {
+		fmt.Printf("Error: %s", err)
+	}
+	defer rows.Close()
+
+	var services []models.Service
+	for rows.Next() {
+		var service models.Service 
+		if err := rows.Scan(&service.ID, &service.Type_ID, &service.Name, &service.Description, &service.Cost, &service.Status); err != nil {
+			fmt.Printf("Error: %s", err)
+		}
+		services = append(services, service)
+	}
+	// check for err in rows 
+	if err := rows.Err(); err != nil {
+		fmt.Printf("Error: %s", err)
+	}
+	for _, service := range services {
+		fmt.Printf("\n\tName: %s\n", service.Name)
+	}
+	return services, nil 
+}  
+
+// type Service struct {
+// 	ID			 int 	   	`db:"id"`
+// 	Type_ID		 int 		`db:"category_id"`
+// 	CategoryName string
+// 	Name 	  	 string  	`db:"name"`
+// 	Description  string		`db:"description"`
+// 	Cost 		 float32 	`db:"cost"`
+// 	Status       bool 		`db:"status"`
+// }
 
 
 func LoadActiveServices(db *sql.DB, serviceCategories []models.ServiceCategory) ([]models.Service, error) {
