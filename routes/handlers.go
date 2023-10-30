@@ -9,14 +9,16 @@ import (
 	"database/sql"
 
 	"github.com/SmokierLemur51/gleaf/data"
+	"github.com/SmokierLemur51/gleaf/utils"
 )
 
+const (
 
+	MISSION_STATEMENT = "Mission Statement"
+)
 
 func connectDb() (*sql.DB, error) {
-	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", 
-		data.C.Host, data.C.Port, data.C.User, data.C.Password, data.C.DBName
-	)
+	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", data.C.Host, data.C.Port, data.C.User, data.C.Password, data.C.DBName)
 	db, err := sql.Open("postgres", psqlconn)
 	if err != nil {
 		log.Fatal(err)
@@ -29,12 +31,12 @@ func connectDb() (*sql.DB, error) {
 }
 
  
-func IndexHandler(w http.ResponseWriter, r *http.Request) {
+func IndexHandler(w http.ResponseWriter, r *http.Request) error {
 	var db *sql.DB
 	var err error
 	var services []data.Service
 	tempUser := data.User{ID: 1,Username: "SmokierLemur51",Password: "password",}
-	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", data.C.Host, data.C.Port, data.C.User, data.C.Password, data.C.DBName)
 	db, err = sql.Open("postgres", psqlconn)
 	if err != nil {
 		log.Println(err)
@@ -57,46 +59,49 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 		UserHash: utils.GenerateHash(tempUser.Username),
 		Services: services,
 	}
-	page.RenderTemplate(w)
+	page.RenderPage(w)
+	return nil
 }
 
 
 
-func AboutHandler(w http.ResponseWriter, r *http.Request) {
+func AboutHandler(w http.ResponseWriter, r *http.Request) error {
 	page := data.PageData{
 		Page: "about.html",
 		Title: "Greenleaf Cleaning",
 		Message: MISSION_STATEMENT,
 		UserHash: utils.GenerateHash("test"),
 	}
-	page.RenderTemplate(w)
+	page.RenderPage(w)
+	return nil
 }
 
 
-func ContactHandler(w http.ResponseWriter, r *http.Request) {
+func ContactHandler(w http.ResponseWriter, r *http.Request) error {
 	page := data.PageData{
 		Page: "contact.html",
 		Title: "Greenleaf Cleaning",
 		Message: MISSION_STATEMENT,
 		UserHash: utils.GenerateHash("test"),
 	}
-	page.RenderTemplate(w)
-
+	page.RenderPage(w)
+	return nil
 }
 
-func RegisterHandler(w http.ResponseWriter, r *http.Request) {
+func RegisterHandler(w http.ResponseWriter, r *http.Request) error {
 	page := data.PageData{
 		Page: "register.html",
 		Title: "Greenleaf Cleaning",
 		Message: MISSION_STATEMENT,
 		UserHash: utils.GenerateHash("test"),
 	}
-	page.RenderTemplate(w)
+	page.RenderPage(w)
+	return nil
 }
 
 // testing pages
 // temp comparison
-func ComparisonHandler(w http.ResponseWriter, r *http.Request) {
+func ComparisonHandler(w http.ResponseWriter, r *http.Request) error {
 	tempUser := data.User{
 		ID: 1,
 		Username: "SmokierLemur51",
@@ -110,6 +115,6 @@ func ComparisonHandler(w http.ResponseWriter, r *http.Request) {
 		UserHash: utils.GenerateHash(tempUser.Username),
 	}
 
-	page.RenderTemplate(w)
-
+	page.RenderPage(w)
+	return nil
 }

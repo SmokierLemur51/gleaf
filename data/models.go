@@ -2,6 +2,8 @@ package data
 
 import (
 	"time"
+	"net/http"
+	"html/template"
 )
 
 // * * * * * * * * * * * * * * * Page Related  * * * * * * * * * * * * * * * * 
@@ -15,7 +17,7 @@ type PageData struct {
 	Services    []Service
 }
 
-func (p Page) RenderPage(w http.ResponseWriter) {
+func (p PageData) RenderPage(w http.ResponseWriter) {
 	tmpl, err := template.ParseFiles("templates/" + p.Page)
 	if err != nil {
 		return

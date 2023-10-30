@@ -14,26 +14,24 @@ func CheckErr(err error) {
 
 type DBConn struct {
 	Host string
-	Port string
+	Port int
 	User string
 	Password string
 	DBName string
 }
 
-const (
-	C = DBConn{
-		Host: "localhost", 
-		Port: 5432, 
-		User: "postgres", 
-		Password: "1lP(=F=<HHwD]v",
-		DBName: "gleaftesting",
-	}
-)
+
+var C = DBConn{
+	Host: "localhost", 
+	Port: 5432, 
+	User: "postgres", 
+	Password: "1lP(=F=<HHwD]v",
+	DBName: "gleaftesting",
+}
+
 
 func InitConn() {
-	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", 
-		C.Host, C.Port, C.User, C,Password, C.DBName
-	)
+	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", C.Host, C.Port, C.User, C.Password, C.DBName)
 	db, err := sql.Open("postgres", psqlconn)
 	CheckErr(err)
 
