@@ -1,9 +1,11 @@
-package models 
+package data
+
 import (
 	"time"
 )
 
-// FIXLOG 1
+// * * * * * * * * * * * * * * * Page Related  * * * * * * * * * * * * * * * * 
+
 
 type PageData struct {
 	Page 		string
@@ -13,11 +15,18 @@ type PageData struct {
 	Services    []Service
 }
 
+func (p Page) RenderPage(w http.ResponseWriter) {
+	tmpl, err := template.ParseFiles("templates/" + p.Page)
+	if err != nil {
+		return
+	}
+	err = tmpl.Execute(w, p)
+	if err != nil {
+		return
+	}
+}
 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  * * * * * * * 
 // * * * * * * * * * * * * * * * Service Related  * * * * * * * * * * * * * * * * 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  * * * * * * * 
-
 
 type ServiceCategory struct {
 	ID 			int 	`db:"id"`
@@ -35,11 +44,7 @@ type Service struct {
 	Status       bool 		`db:"status"`
 }
 
-
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  * * * * * * * 
 // * * * * * * * * * * * * * * * Contact Related  * * * * * * * * * * * * * * * * 
-// * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *  * * * * * * * 
-
 
 type User struct {
 	ID int16
@@ -83,7 +88,48 @@ type PaymentInformation struct {
 	Paid 			bool
 	PaymentDate     time.Time
 }
-// FIXLOG 2
 
 
+// * * * * * * * * * * * * * * * Admin Related  * * * * * * * * * * * * * * * * 
+
+type AdminPageData struct {
+	Page 				string
+	Title   			string
+	ServiceCategories   []ServiceCategory
+	Services 			[]Service
+	IncompleteContactRequests []ContactRequest
+	IncompleteBookings  []Bookings
+	FinancialData		Finances
+}
+
+func (p AdminPageData) RenderAdminPage(w http.ResponseWriter) {
+	tmpl, err := template.ParseFiles("templates/" + p.Page)
+	if err != nil {
+		return
+	}
+	err = tmpl.Execute(w, p)
+	if err != nil {
+		return
+	}	
+}
+
+
+type Finances struct {
+	GrossIncome		float32
+	Taxes  			float32
+	MonthlyExpenses		[]MonthlyExpenses
+}
+
+type MonthlyExpenses struct {
+	Advertising		float32
+	Wages			float32
+	Gas  			float32
+	Materials   	float32
+	OfficeSupplies  float32
+	Hosting			float32
+	Meals 			float32
+	Rent 			float32
+}
+
+type Bookings struct {}
 

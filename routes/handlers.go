@@ -1,4 +1,6 @@
-package handlers
+package routes
+
+// 
 
 import (
 	"net/http"
@@ -6,25 +8,15 @@ import (
 	"log"
 	"database/sql"
 
-	"github.com/SmokierLemur51/gleaf/models"
-	"github.com/SmokierLemur51/gleaf/utils"
-	"github.com/SmokierLemur51/gleaf/database"
-)
- 
-const (
-	MISSION_STATEMENT string = "A cleaner and greener way of living"
-	PORT 		= ":5000"
-	host 		= "localhost"
-	port 		= 5432
-	user 		= "postgres"
-	password 	= "1lP(=F=<HHwD]v"
-	dbname		= "gleaftesting"
+	"github.com/SmokierLemur51/gleaf/data"
 )
 
 
 
 func connectDb() (*sql.DB, error) {
-	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", 
+		data.C.Host, data.C.Port, data.C.User, data.C.Password, data.C.DBName
+	)
 	db, err := sql.Open("postgres", psqlconn)
 	if err != nil {
 		log.Fatal(err)
@@ -40,8 +32,8 @@ func connectDb() (*sql.DB, error) {
 func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	var db *sql.DB
 	var err error
-	var services []models.Service
-	tempUser := models.User{ID: 1,Username: "SmokierLemur51",Password: "password",}
+	var services []data.Service
+	tempUser := data.User{ID: 1,Username: "SmokierLemur51",Password: "password",}
 	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
 	db, err = sql.Open("postgres", psqlconn)
 	if err != nil {
@@ -53,90 +45,71 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	defer db.Close()
 
-	services, err = database.LoadAllServices(db)
+	services, err = data.LoadAllServices(db)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 
-	page := models.PageData{
+	page := data.PageData{
 		Page: "index.html",
 		Title: "Greenleaf Cleaning",
 		Message: MISSION_STATEMENT,
 		UserHash: utils.GenerateHash(tempUser.Username),
 		Services: services,
 	}
-
-	err = utils.RenderTemplate(w, page)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	page.RenderTemplate(w)
 }
 
 
 
 func AboutHandler(w http.ResponseWriter, r *http.Request) {
-	page := models.PageData{
+	page := data.PageData{
 		Page: "about.html",
 		Title: "Greenleaf Cleaning",
 		Message: MISSION_STATEMENT,
 		UserHash: utils.GenerateHash("test"),
 	}
-	err := utils.RenderTemplate(w, page)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	page.RenderTemplate(w)
 }
 
 
 func ContactHandler(w http.ResponseWriter, r *http.Request) {
-	page := models.PageData{
+	page := data.PageData{
 		Page: "contact.html",
 		Title: "Greenleaf Cleaning",
 		Message: MISSION_STATEMENT,
 		UserHash: utils.GenerateHash("test"),
 	}
-	err := utils.RenderTemplate(w, page)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	page.RenderTemplate(w)
+
 }
 
 func RegisterHandler(w http.ResponseWriter, r *http.Request) {
-	page := models.PageData{
+	page := data.PageData{
 		Page: "register.html",
 		Title: "Greenleaf Cleaning",
 		Message: MISSION_STATEMENT,
 		UserHash: utils.GenerateHash("test"),
 	}
-	err := utils.RenderTemplate(w, page)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	page.RenderTemplate(w)
 }
 
 // testing pages
 // temp comparison
 func ComparisonHandler(w http.ResponseWriter, r *http.Request) {
-	tempUser := models.User{
+	tempUser := data.User{
 		ID: 1,
 		Username: "SmokierLemur51",
 		Password: "password",
 	}
 
-	page := models.PageData{
+	page := data.PageData{
 		Page: "testing/index_comparison.html",
 		Title: "Greenleaf Cleaning",
 		Message: MISSION_STATEMENT,
 		UserHash: utils.GenerateHash(tempUser.Username),
 	}
 
-	err := utils.RenderTemplate(w, page)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
+	page.RenderTemplate(w)
+
 }

@@ -1,4 +1,4 @@
-package database
+package data
 
 import (
 	"database/sql"
@@ -28,14 +28,13 @@ func AddTable(db *sql.DB, tableName, sqlStatement string) error {
 
 
 func CreateGleafTables(db *sql.DB) {
-	// create service categories table
-	// createServiceCategoriesTableSQL := `
-	// 	CREATE TABLE IF NOT EXISTS service_categories (
-	// 		id SERIAL PRIMARY KEY,
-	// 		name VARCHAR () NOT NULL,
-	// 		description VARCHAR () NOT NULL,
-	// 	);`
-
+	create service categories table
+	createServiceCategoriesTableSQL := `
+		CREATE TABLE IF NOT EXISTS service_categories (
+			id SERIAL PRIMARY KEY,
+			name VARCHAR () NOT NULL,
+			description VARCHAR () NOT NULL,
+		);`
 
 	// create services table
 	createServicesTableSQL := `

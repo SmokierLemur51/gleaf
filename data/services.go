@@ -1,10 +1,9 @@
-package database
+package data
 
 import (
 	"database/sql"
 	"log"
 	"fmt"
-	"github.com/SmokierLemur51/gleaf/models"
 	_ "github.com/lib/pq"
 )
 
@@ -28,8 +27,8 @@ func InsertServiceCategory(db *sql.DB, name, description string) {
 	}
 } 
 
-func LoadServiceCategory(db *sql.DB, searchQuery string) (models.ServiceCategory, error) {
-	var cat models.ServiceCategory
+func LoadServiceCategory(db *sql.DB, searchQuery string) (ServiceCategory, error) {
+	var cat ServiceCategory
 	
 	stmt, err := db.Prepare("select id, name, description from service_categories where name = $1;")
 	if err != nil {
@@ -52,8 +51,8 @@ func LoadServiceCategory(db *sql.DB, searchQuery string) (models.ServiceCategory
 
 
 
-func LoadAllServiceCategories(db *sql.DB) ([]models.ServiceCategory, error){
-	var ServiceCategoryResults []models.ServiceCategory
+func LoadAllServiceCategories(db *sql.DB) ([]ServiceCategory, error){
+	var ServiceCategoryResults []ServiceCategory
 	query := "select id, name, description from service_categories;"
 	rows, err := db.Query(query)
 	if err != nil {
@@ -62,7 +61,7 @@ func LoadAllServiceCategories(db *sql.DB) ([]models.ServiceCategory, error){
 	defer rows.Close()
 
 	for rows.Next() {
-		var category models.ServiceCategory
+		var category ServiceCategory
 		if err := rows.Scan(&category.ID, &category.Name, &category.Description); err != nil {
 			fmt.Println("Error scanning row.")
 		}
@@ -90,7 +89,7 @@ func LoadAllServiceCategories(db *sql.DB) ([]models.ServiceCategory, error){
 
 
 func InsertService(db *sql.DB, categoryName, name, description string, cost float32, status bool) (error) {
-	var category models.ServiceCategory
+	var category ServiceCategory
 	var err error
 	category, err = LoadServiceCategory(db, categoryName)
 	if err != nil {
@@ -115,8 +114,8 @@ func InsertService(db *sql.DB, categoryName, name, description string, cost floa
 // 	return nil 
 // }
 
-func SearchDBForService(db *sql.DB, serviceName string) (models.Service, error) {
-	var service models.Service 
+func SearchDBForService(db *sql.DB, serviceName string) (Service, error) {
+	var service Service 
 // 	query := "select id, category_id, name, description, cost from services where name = $1;"
 // 	rows, err := db.QueryRow(query, serviceName)
 // 	if err != nil {
@@ -129,14 +128,14 @@ func SearchDBForService(db *sql.DB, serviceName string) (models.Service, error) 
 }
 
 
-func AlterServiceStatus(db *sql.DB, unalteredService, alteredService models.Service) (models.Service, error) {
-	var service models.Service
+func AlterServiceStatus(db *sql.DB, unalteredService, alteredService Service) (Service, error) {
+	var service Service
 	// query := 
 
 	return service, nil
 }
 
-func LoadAllServices(db *sql.DB) ([]models.Service, error) {
+func LoadAllServices(db *sql.DB) ([]Service, error) {
 	stmt := "select id, category_id, name, description, cost, status from services;"
 	rows, err := db.Query(stmt)
 	if err != nil {
@@ -144,9 +143,9 @@ func LoadAllServices(db *sql.DB) ([]models.Service, error) {
 	}
 	defer rows.Close()
 
-	var services []models.Service
+	var services []Service
 	for rows.Next() {
-		var service models.Service 
+		var service Service 
 		if err := rows.Scan(&service.ID, &service.Type_ID, &service.Name, &service.Description, &service.Cost, &service.Status); err != nil {
 			fmt.Printf("Error: %s", err)
 		}
@@ -173,8 +172,8 @@ func LoadAllServices(db *sql.DB) ([]models.Service, error) {
 // }
 
 
-func LoadActiveServices(db *sql.DB, serviceCategories []models.ServiceCategory) ([]models.Service, error) {
-	var ActiveServices []models.Service
+func LoadActiveServices(db *sql.DB, serviceCategories []ServiceCategory) ([]Service, error) {
+	var ActiveServices []Service
 	query := "select * from services where status = true"
 	rows, err := db.Query(query)
 	if err != nil {
@@ -183,7 +182,7 @@ func LoadActiveServices(db *sql.DB, serviceCategories []models.ServiceCategory) 
 	defer rows.Close()
 
 	for rows.Next() {
-		var item models.Service
+		var item Service
 		if item.Status == true {
 			err := rows.Scan(&item.ID, &item.Type_ID, &item.Name, &item.Description, &item.Cost, &item.Status)
 			if err != nil {
