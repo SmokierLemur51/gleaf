@@ -3,10 +3,11 @@ package data
 import (
 	"database/sql"
 	"fmt"
-	// "time"
-    "log"
 
-    // "github.com/SmokierLemur51/gleaf/utils"
+	// "time"
+	"log"
+
+	// "github.com/SmokierLemur51/gleaf/utils"
 	_ "github.com/lib/pq"
 )
 
@@ -22,10 +23,6 @@ func AddTable(db *sql.DB, tableName, sqlStatement string) error {
 	fmt.Printf("\t*    Table '%s' created successfully\r\n", tableName)
 	return err
 }
-
-
-
-
 
 func CreateGleafTables(db *sql.DB) {
 	// create service categories table
@@ -57,7 +54,7 @@ func CreateGleafTables(db *sql.DB) {
 			zip VARCHAR (5) NOT NULL
 		);
 	`
-	// create contacts table 
+	// create contacts table
 	createContactsTableSQL := `
 		CREATE TABLE IF NOT EXISTS contacts (
 			id SERIAL PRIMARY KEY,
@@ -121,8 +118,8 @@ func CreateGleafTables(db *sql.DB) {
 			service_id INTEGER REFERENCES services(id)
 		);
 	`
-    // create completed bookings CreateGleafTables
-    createCompletedBookingsTableSQL := `
+	// create completed bookings CreateGleafTables
+	createCompletedBookingsTableSQL := `
         CREATE TABLE IF NOT EXISTS completed_bookings (
             id SERIAL PRIMARY KEY,    
             order_id INTEGER REFERENCES bookings(id),
@@ -133,7 +130,7 @@ func CreateGleafTables(db *sql.DB) {
         );
     `
 	// AddTable(db, "service_categories", createServiceCategoriesTableSQL)
-	if err := AddTable(db, "services", createServicesTableSQL); err != nil{
+	if err := AddTable(db, "services", createServicesTableSQL); err != nil {
 		log.Fatal(err)
 	}
 	AddTable(db, "addresses", createAddressesTableSQL)
@@ -145,6 +142,6 @@ func CreateGleafTables(db *sql.DB) {
 	AddTable(db, "cancelled_bookings", createCancelledBookingsTableSQL)
 	AddTable(db, "completed_bookings", createCompletedBookingsTableSQL)
 
-	fmt.Println("\n\n\n\n\t*    Success creating database tables.\r\n\n")
+	fmt.Println("\n\n\n\n\t*    Success creating database tables.")
 	db.Close()
 }

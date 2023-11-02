@@ -3,6 +3,7 @@ package data
 import (
 	"database/sql"
 	"fmt"
+
 	_ "github.com/lib/pq"
 )
 
@@ -13,22 +14,20 @@ func CheckErr(err error) {
 }
 
 type DBConn struct {
-	Host string
-	Port int
-	User string
+	Host     string
+	Port     int
+	User     string
 	Password string
-	DBName string
+	DBName   string
 }
-
 
 var C = DBConn{
-	Host: "localhost", 
-	Port: 5432, 
-	User: "postgres", 
+	Host:     "localhost",
+	Port:     5432,
+	User:     "postgres",
 	Password: "1lP(=F=<HHwD]v",
-	DBName: "gleaftesting",
+	DBName:   "gleaftesting",
 }
-
 
 func InitConn() {
 	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", C.Host, C.Port, C.User, C.Password, C.DBName)
@@ -40,8 +39,6 @@ func InitConn() {
 	err = db.Ping()
 	CheckErr(err)
 
-	fmt.Println("\tDatabase connection successful!\r\n\n")
+	fmt.Println("\tDatabase connection successful!")
 
 }
-
-
