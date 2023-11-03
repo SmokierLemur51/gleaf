@@ -33,7 +33,7 @@ func connectDb() (*sql.DB, error) {
 
 func tempServiceLoader() ([]data.Service, error) {
 	return []data.Service{
-		{ID: 1, Type_ID: 1, CategoryName: "Residential", Name: "Quick Clean", Description: "A quick clean of your house!", Cost: 150.00, ImageURL: "/static/img/quickclean.jpg"},
+		{ID: 1, Type_ID: 1, CategoryName: "Residential", Name: "Quick Clean", Description: "A quick clean of your house!", Cost: 150.00, ImageURL: "/static/img/quick-clean-smaller.jpg"},
 		{ID: 2, Type_ID: 2, CategoryName: "Window", Name: "Eco-Friendly Window Cleaning", Description: "Window deep cleaning", Cost: 20.00, ImageURL: "/static/img/eco-window.jpeg"},
 		{ID: 3, Type_ID: 3, CategoryName: "Moving", Name: "Move Out Cleaning", Description: move, Cost: 350.00, ImageURL: "/static/img/moving.png"},
 		{ID: 4, Type_ID: 1, CategoryName: "Residential", Name: "Residential Deep Clean", Description: resDeep, Cost: 300.00, ImageURL: "/static/img/res-clean.jpg"},

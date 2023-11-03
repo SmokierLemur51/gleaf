@@ -50,17 +50,19 @@
 
           <div class="container-fluid">
               <div class="row">
-                {{ range .Services}}
-                  <div class="card" style="width: 18rem;">
-                    <img src="{{ .ImageURL }}" class="card-img-top image-same-size" alt="...">
-                    <div class="card-body">
-                      <h5 class="card-title">{{ .Name }}</h5>
-                      <p class="card-text">{{ .Description }}</p>
-                      <a href="#" class="btn btn-primary">Schedule Group Booking</a>
-                      <a href="#" class="btn btn-primary">Schedule Cleaning</a>
+                <div class="col-md-9">
+                  {{ range .Services}}
+                    <div class="card" style="width: 18rem;">
+                      <img src="{{ .ImageURL }}" class="card-img-top" alt="...">
+                      <div class="card-body">
+                        <h5 class="card-title">{{ .Name }}</h5>
+                        <p class="card-text">{{ .Description }}</p>
+                        <a href="#" class="btn btn-primary">Schedule Group Booking</a>
+                        <a href="#" class="btn btn-primary">Schedule Cleaning</a>
+                      </div>
                     </div>
                   {{ end }}
-                  </div>
+                </div>
                   <div class="col-md-9">
                       <div class="container-fluid">
                           {{ range .Services }}  
