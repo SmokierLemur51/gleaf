@@ -14,6 +14,8 @@ import (
 
 const (
 	MISSION_STATEMENT = "Mission Statement"
+	move              = "A deep clean of your old space, make it look like you were never there."
+	resDeep           = "A deep cleaning of your house to help you catch up on what you were behind on."
 )
 
 func connectDb() (*sql.DB, error) {
@@ -29,23 +31,36 @@ func connectDb() (*sql.DB, error) {
 	return db, err
 }
 
-func IndexHandler(w http.ResponseWriter, r *http.Request) error {
-	var db *sql.DB
-	var err error
-	var services []data.Service
-	tempUser := data.User{ID: 1, Username: "SmokierLemur51", Password: "password"}
-	psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", data.C.Host, data.C.Port, data.C.User, data.C.Password, data.C.DBName)
-	db, err = sql.Open("postgres", psqlconn)
-	if err != nil {
-		log.Println(err)
-	}
-	err = db.Ping()
-	if err != nil {
-		log.Println(err)
-	}
-	defer db.Close()
+func tempServiceLoader() ([]data.Service, error) {
+	return []data.Service{
+		{ID: 1, Type_ID: 1, CategoryName: "Residential", Name: "Quick Clean", Description: "A quick clean of your house!", Cost: 150.00, ImageURL: "/static/img/quickclean.jpg"},
+		{ID: 2, Type_ID: 2, CategoryName: "Window", Name: "Eco-Friendly Window Cleaning", Description: "Window deep cleaning", Cost: 20.00, ImageURL: "/static/img/eco-window.jpeg"},
+		{ID: 3, Type_ID: 3, CategoryName: "Moving", Name: "Move Out Cleaning", Description: move, Cost: 350.00, ImageURL: "/static/img/moving.png"},
+		{ID: 4, Type_ID: 1, CategoryName: "Residential", Name: "Residential Deep Clean", Description: resDeep, Cost: 300.00, ImageURL: "/static/img/res-clean.jpg"},
+	}, nil
+}
 
-	services, err = data.LoadAllServices(db)
+func IndexHandler(w http.ResponseWriter, r *http.Request) error {
+	// the below is edited out until postgres ise
+
+	// var db *sql.DB
+	// var err error
+	// var services []data.Service
+	// tempUser := data.User{ID: 1, Username: "SmokierLemur51", Password: "password"}
+	// psqlconn := fmt.Sprintf("host=%s port=%d user=%s password=%s dbname=%s sslmode=disable", data.C.Host, data.C.Port, data.C.User, data.C.Password, data.C.DBName)
+	// db, err = sql.Open("postgres", psqlconn)
+	// if err != nil {
+	// 	log.Println(err)
+	// }
+	// err = db.Ping()
+	// if err != nil {
+	// 	log.Println(err)
+	// }
+	// defer db.Close()
+
+	// services, err = data.LoadAllServices(db)
+
+	services, err := tempServiceLoader()
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
@@ -54,7 +69,6 @@ func IndexHandler(w http.ResponseWriter, r *http.Request) error {
 		Page:     "index.html",
 		Title:    "Greenleaf Cleaning",
 		Message:  MISSION_STATEMENT,
-		UserHash: utils.GenerateHash(tempUser.Username),
 		Services: services,
 	}
 	page.RenderPage(w)

@@ -20,6 +20,7 @@ type Service struct {
 	Description  string  `db:"description"`
 	Cost         float32 `db:"cost"`
 	Status       bool    `db:"status"`
+	ImageURL     string  `db:"image_url"`
 }
 
 // * * * * * * * * * * * * * * * Contact Related  * * * * * * * * * * * * * * * *
