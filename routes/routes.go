@@ -29,3 +29,10 @@ func ConfigureRoutes(router *chi.Mux) {
 	// router.Get("/admin", handlers.AdminIndexHandler)
 
 }
+
+func ProtectedRoutes(router *chi.Mux) {
+
+	// router.Method(http.MethodGet, "/cafe-greenleaf")
+	router.Method(http.MethodGet, "/portal", Handler(CafeLoginHandler))
+	router.Method(http.MethodPost, "/portal", Handler(CafeLoginHandler))
+}

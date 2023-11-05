@@ -25,3 +25,20 @@ func (p PageData) RenderPage(w http.ResponseWriter) {
 		return
 	}
 }
+
+// cafe section baby
+type CafePageData struct {
+	Page  string
+	Title string
+}
+
+func (c CafePageData) RenderCafe(w http.ResponseWriter) {
+	tmpl, err := template.ParseFiles("templates/admin/" + c.Page)
+	if err != nil {
+		return
+	}
+	err = tmpl.Execute(w, c)
+	if err != nil {
+		return
+	}
+}
