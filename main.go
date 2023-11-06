@@ -58,20 +58,24 @@ func main() {
 
 	// protected routes
 	// this one is balogna
-	r.Group(func(r chi.Router) {
-		r.Use(jwtauth.Verifier(tokenAuth))
+	// r.Group(func(r chi.Router) {
+	// 	r.Use(jwtauth.Verifier(tokenAuth))
 
-		// handle valid & invalid tokens. This example is using provded auth
-		// middleware
-		r.Use(jwtauth.Authenticator)
+	// 	// handle valid & invalid tokens. This example is using provded auth
+	// 	// middleware
+	// 	r.Use(jwtauth.Authenticator)
 
-		r.Get("/admin", func(w http.ResponseWriter, r *http.Request) {
-			_, claims, _ := jwtauth.FromContext(r.Context())
-			w.Write([]byte(fmt.Sprintf("Protected area, hi %v", claims["user_id"])))
-		})
-	})
+	// 	r.Get("/admin", func(w http.ResponseWriter, r *http.Request) {
+	// 		_, claims, _ := jwtauth.FromContext(r.Context())
+	// 		w.Write([]byte(fmt.Sprintf("Protected area, hi %v", claims["user_id"])))
+	// 	})
 
-	routes.ProtectedRoutes(r)
+	// 	r.Method(http.MethodGet, "/test", admin.AuthHandler(admin.TestHander))
+	// })
+
+	// routes.ProtectedRoutes(r)
+
+	// r := routes.Router(tokenAuth)
 
 	log.Println("Starting server on port ", PORT)
 	http.ListenAndServe(PORT, r)

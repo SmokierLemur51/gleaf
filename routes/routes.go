@@ -4,6 +4,8 @@ import (
 	"net/http"
 
 	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/jwtauth/v5"
 )
 
 type Handler func(w http.ResponseWriter, r *http.Request) error
@@ -22,17 +24,45 @@ func ConfigureRoutes(router *chi.Mux) {
 	router.Method(http.MethodGet, "/contact", Handler(ContactHandler))
 	router.Method(http.MethodGet, "/register", Handler(RegisterHandler))
 
-	// testing pages
-	router.Method(http.MethodGet, "/comparison", Handler(ComparisonHandler))
-
 	// ** admin pages **
-	// router.Get("/admin", handlers.AdminIndexHandler)
+	router.Group(func(r chi.Router) {
+		// routes that need auth
+		r.Use(jwtauth.Verifier(tokenAuth))
 
+		r.Method(http.MethodGet, "/portal", Handler(CafeLoginHandler))
+	})
+
+	router.Group(func(r chi.Router) {
+		// post routes for authentication
+
+		r.Post("/portal", LoginAuthenticator)
+		r.Post("/logout", LogoutHandler)
+	})
 }
 
-func ProtectedRoutes(router *chi.Mux) {
+func Router(tokenAuth *jwtauth.JWTAuth) chi.Router {
+	r := chi.NewRouter()
+	r.Use(middleware.Logger)
 
-	// router.Method(http.MethodGet, "/cafe-greenleaf")
-	router.Method(http.MethodGet, "/portal", Handler(CafeLoginHandler))
-	router.Method(http.MethodPost, "/portal", Handler(CafeLoginHandler))
+	r.Handle("/static/*", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
+
+	r.Method(http.MethodGet, "/", Handler(IndexHandler))
+	r.Method(http.MethodGet, "/about", Handler(AboutHandler))
+	r.Method(http.MethodGet, "/contact", Handler(ContactHandler))
+	r.Method(http.MethodGet, "/register", Handler(RegisterHandler))
+
+	r.Group(func(r chi.Router) {
+		// routes that need auth
+		r.Use(jwtauth.Verifier(tokenAuth))
+
+		r.Method(http.MethodGet, "/portal", Handler(CafeLoginHandler))
+	})
+
+	r.Group(func(r chi.Router) {
+		// post routes for authentication
+
+		r.Post("/portal", LoginAuthenticator)
+		r.Post("/logout", LogoutHandler)
+	})
+	return r
 }
