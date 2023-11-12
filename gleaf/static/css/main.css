@@ -1,0 +1,48 @@
+/* NAVBAR */
+
+.navtest {
+    /* gets rid of top whitespace */
+    padding-top: 0;
+}
+
+
+.color {
+    background-color: #A7CEAA;
+    padding: 10pt;
+}
+
+/* button color #379B41 for login on index page */
+
+
+.card-container {
+    display: flex;
+}
+
+.card {
+    flex: 1 1 0;
+}
+
+.mission-statement {
+    font-family: "Arial", sans-serif;
+    font-style: italic;
+}
+
+.background-image {
+    
+}
+
+
+body {
+  background: #fafafa;
+  color: #333333;
+  
+}
+
+
+
+.foot-color {
+    background-color: #A7CEAA;
+    /* position: fixed;
+    height: 0;
+    width: 100%; */
+}

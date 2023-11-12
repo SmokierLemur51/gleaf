@@ -1,0 +1,65 @@
+{% extends 'portal.html' %}
+{% block content %}
+
+    <h1>Welcome Team</h1>
+    <div class="container-md">
+        <form method="post" action="/portal/test">
+            <label for="name">Category</label>
+            <input type="text" id="name" name="category">
+            <label for="describe">Description</label>
+            <textarea name="description" id="describe" cols="30" rows="5"></textarea>
+            <button type="submit">Submit</button>
+        </form>
+        <br></br><br><br>
+        <form method="POST", action="{{ url_for('admin.portal') }}">
+            {{ form.hidden_tag() }}
+            <fieldset class="form-group">
+                <legend class="border-bottom mb-4">{{ legend }}</legend>
+                <div class="form-group">
+                    {{ form.category.label(class="form-control-label") }}
+                    {% if form.category.errors %}
+                        {{ form.category(class="form-control form-control-lg is-valid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.category.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.category(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+                <div class="form-group">
+                    {{ form.description.label(class="form-control-label") }}
+                    {% if form.description.errors %}
+                        {{ form.description(class="form-control form-control-lg is-invalid") }}
+                        <div class="invalid-feedback">
+                            {% for error in form.description.errors %}
+                                <span>{{ error }}</span>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        {{ form.description(class="form-control form-control-lg") }}
+                    {% endif %}
+                </div>
+            </fieldset>
+            <div class="form-group">
+                {{ form.submit(class="btn btn-outline-info") }}
+            </div>
+        </form>
+    </div>
+    <br>
+    <br>
+    <div class="container-md">
+        <div class="card" style="width: 18rem;">
+          <div class="card-header">
+            Service Categories
+          </div>
+          <ul class="list-group list-group-flush">
+              {% for c in cats %}
+               <li class="list-group-item">{{ c.category }}</li>
+              {% endfor %}
+          </ul>
+        </div>
+    </div>
+{% endblock content %}
+
