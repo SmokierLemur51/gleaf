@@ -1,9 +1,9 @@
 from flask import Blueprint, render_template, flash, url_for, redirect, request
-from greenleaf.portal import forms
+from gleaf.portal import forms
 
-from greenleaf.portal.forms import CreateServiceCategoryForm
-from greenleaf.extensions import db
-from greenleaf.models import ServiceCategory
+from gleaf.portal.forms import CreateServiceCategoryForm
+from ..extensions import db
+from ..models.main import ServiceCategory
 
 portal = Blueprint("portal", __name__, template_folder="templates")
 

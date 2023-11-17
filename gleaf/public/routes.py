@@ -1,8 +1,8 @@
 from flask import Blueprint, render_template, url_for, current_app, g, request
 from flask.helpers import redirect
 
-from greenleaf.extensions import db
-from greenleaf.models import ServiceCategory
+from ..extensions import db
+from ..models.main import ServiceCategory
 
 public = Blueprint("public", __name__, template_folder="templates")
 

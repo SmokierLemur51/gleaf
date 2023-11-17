@@ -1,6 +1,6 @@
 from datetime import datetime
 from flask import current_app
-from greenleaf import db
+from ..extensions import db
 
 # https://www.youtube.com/watch?v=TwNp1UagE9U  // https://github.com/realpython/discover-flask/blob/master/db_create.py
 # https://stackoverflow.com/questions/17652937/how-to-build-a-flask-application-around-an-already-existing-database
