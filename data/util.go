@@ -3,6 +3,7 @@ package data
 import (
     "log"
 	"fmt"
+    "database/sql"
 	"crypto/sha256"
 	"crypto/subtle"
 	"encoding/base64"

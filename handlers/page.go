@@ -1,9 +1,9 @@
-package routes
+package handlers
 
 import (
-	"html/template"
-	"main/data"
 	"net/http"
+	"html/template"
+	"github.com/SmokierLemur51/gleaf/data"
 )
 
 type PublicPageData struct {
