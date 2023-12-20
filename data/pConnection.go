@@ -1,4 +1,4 @@
-package database
+package data
 
 import (
 	"database/sql"
@@ -28,5 +28,4 @@ func InitConn() {
 	fmt.Println("\tDatabase connection successful!\r\n\n")
 
 }
-
 
