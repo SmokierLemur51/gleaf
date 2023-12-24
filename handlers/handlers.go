@@ -10,7 +10,9 @@ import (
 	// "github.com/go-chi/jwtauth/v5"
 )
 
- 
+var (
+    key []byte
+) 
 
 type Controller struct {
     DB *sql.DB

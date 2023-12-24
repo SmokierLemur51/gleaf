@@ -1,24 +1,15 @@
 package main
 
 import (
-	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/SmokierLemur51/gleaf/handlers"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/go-chi/jwtauth/v5"
 	_ "github.com/mattn/go-sqlite3"
 )
 
-var tokenAuth *jwtauth.JWTAuth
-
-func init() {
-    tokenAuth = jwtauth.New("HS256", []byte("secret"), nil)
-    _, tokenString, _ := tokenAuth.Encode(map[string]interface{}{"user_id": 123})
-    fmt.Printf("\n\nDebug: Sample Token: %s\n\n", tokenString)
-}
 
 func main() {
 	var PORT string = ":5000"
@@ -33,10 +24,8 @@ func main() {
 
     c := handlers.Controller{}
     c.ConnectDatabase("sqlite3", "testing.db")
-    c.RegisterRoutes(r)
-
-    
+    c.RegisterRoutes(r) 
 
 	log.Println("Starting server on port ", PORT)
-	http.ListenAndServe(PORT, r)
+	log.Fatal(http.ListenAndServe(PORT, r))
 }
