@@ -54,7 +54,7 @@ func CheckExistingService(db *sql.DB, service string) (bool, error) {
 func (s Service) InsertService(db *sql.DB) {
     var execute bool
     var err error
-    execute, err = CheckExistingService(db, s.Service)
+    execute, err = CheckExistence(db, "services", "service", s.Service)
     if err != nil {
         log.Println(err)
         return
@@ -74,9 +74,9 @@ func (s Service) InsertService(db *sql.DB) {
     }
 }
 
-func (s *Service) UpdateSellingPrice(db *sql.DB, selling float64) {}
+func (s Service) UpdateSellingPrice(db *sql.DB, selling float64) {}
 
-func (s *Service) RunReport(db *sql.DB, period string) {
+func (s Service) RunReport(db *sql.DB, period string) {
     // period will be day, week, month, year, all
     switch period {
         case "day":
@@ -160,3 +160,4 @@ func LoadServicesByCategory(db *sql.DB, category string) ([]Service, error) {
     }
     return services, nil 
 }
+
