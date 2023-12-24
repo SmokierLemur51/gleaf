@@ -1,3 +1,10 @@
+/*
+Some useful notes for JWT
+
+Ok to put user credentials in token? - Not sensitive info
+https://stackoverflow.com/questions/42652695/is-it-ok-to-store-user-credentials-in-the-jwt
+*/
+
 package handlers
 
 import (
@@ -20,7 +27,9 @@ type CustomClaims struct {
 	jwt.RegisteredClaims
 }
 
+func CreateToken(sessionID, username string)
 
+func GenerateSessionID(length int) string {}
 
 func GenerateKey(length int) (string, error) {
 	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
