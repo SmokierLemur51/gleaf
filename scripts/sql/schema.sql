@@ -1,6 +1,31 @@
+-- to run: sqlite3 <datebase.db> < data/scripts/script.sql
+
 drop table if exists service_categories; 
 drop table if exists statuses;
 drop table if exists services;
+drop table if exists clearance;
+drop table if exists users;
+
+-- need the following tables
+drop table if exists contact_requests;
+drop table if exists groups;
+drop table if exists addresses;
+
+
+create table clearance (
+    id integer primary key autoincrement,
+    clearance_level varchar(60),
+    c_description text
+);
+
+create table users (
+    id integer primary key autoincrement,
+    email varchar(120) unique not null,
+    username varchar(30) unique not null,
+    password_hash text not null,
+    clearance_level integer,
+    foreign key (clearance_level) references clearance(id)
+);
 
 create table service_categories (
     id integer primary key autoincrement,
