@@ -12,7 +12,8 @@ import (
 )
 
 var (
-	key []byte
+	key  []byte
+	COST = 14
 )
 
 type Controller struct {
@@ -24,6 +25,7 @@ func (c *Controller) ConnectDatabase(database, file string) {
 	if c.DB, err = sql.Open(database, file); err != nil {
 		log.Fatal(err)
 	}
+	c.DB.Ping()
 }
 
 func (c Controller) RegisterRoutes(r chi.Router) {
@@ -33,6 +35,7 @@ func (c Controller) RegisterRoutes(r chi.Router) {
 	// public routes
 	r.Method(http.MethodGet, "/", c.IndexHandler())
 	r.Method(http.MethodGet, "/about", c.AboutHandler())
+	r.Method(http.MethodGet, "/login", c.LoginPageHandler())
 
 	// post methods
 	r.Method(http.MethodPost, "/register-user", c.RegisterNewUser())
@@ -59,6 +62,32 @@ func (c Controller) AboutHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		p := PublicPageData{Page: "about.html", Title: "Greenleaf Cleaning", CSS: CSS_URL, Services: []data.Service{}}
 		p.RenderHTMLTemplate(w)
+	}
+}
+
+func (c Controller) LoginPageHandler() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		p := PublicPageData{Page: "login.html", Title: "Greenleaf Cleaning", CSS: CSS_URL}
+		p.RenderHTMLTemplate(w)
+	}
+}
+
+func (c Controller) ProcessLogin() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if err := r.ParseForm(); err != nil {
+			log.Fatal(err)
+		}
+		// hp, err := HashString(r.FormValue("password"), COST)
+		// if err != nil {
+		// 	log.Fatal(err)
+		// }
+
+		// u, err := VerifyCredentials(c.DB, r.FormValue("email"), hp)
+		// if err != nil {
+		// 	log.Fatal(err)
+		// }
+
+		// sign token with u here
 	}
 }
 

@@ -10,7 +10,6 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-
 func main() {
 	var PORT string = ":5000"
 	r := chi.NewRouter()
@@ -21,10 +20,9 @@ func main() {
 
 	r.Handle("/static/*", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
 
-
-    c := handlers.Controller{}
-    c.ConnectDatabase("sqlite3", "testing.db")
-    c.RegisterRoutes(r) 
+	c := handlers.Controller{}
+	c.ConnectDatabase("sqlite3", "instance/testing.db")
+	c.RegisterRoutes(r)
 
 	log.Println("Starting server on port ", PORT)
 	log.Fatal(http.ListenAndServe(PORT, r))

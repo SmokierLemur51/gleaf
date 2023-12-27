@@ -1,52 +1,55 @@
 package data
- 
+
 import (
-    "log"
-	"fmt"
-    "database/sql"
 	"crypto/sha256"
 	"crypto/subtle"
+	"database/sql"
 	"encoding/base64"
-    _ "github.com/mattn/go-sqlite3"
+	"fmt"
+	"log"
+
+	_ "github.com/mattn/go-sqlite3"
 )
 
+// not done, does db.Prepare protect against the risk of sql injection that fmt.Sprintf creates?
 func CheckExistence(db *sql.DB, table, column, item string) (bool, error) {
-    // returns true if it exists
-    var count int
-    rows, err := db.Query("SELECT COUNT(*) FROM ? WHERE ? = ?", table, column, item)
-    if err != nil {
-        return true, err
-    }
-    defer rows.Close()
-    for rows.Next() {
-        if err := rows.Scan(&count); err != nil {
-            return false, err
-        }
-    }
-    if count > 0 {
-        return true, err
-    }
-    // if not
-    return false, nil
+	// returns true if it exists
+	var count int
+	rows, err := db.Query(fmt.Sprintf("SELECT COUNT(*) FROM %s WHERE %s = ?", table, column), item)
+	if err != nil {
+		return true, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		if err := rows.Scan(&count); err != nil {
+			return false, err
+		}
+	}
+	if count > 0 {
+		return true, err
+	}
+	// if not
+	return false, nil
 }
 
+// not done needs to also return error
 func FindDatabaseID(db *sql.DB, table, column, item string) int {
-    rows, err := db.Query(fmt.Sprintf("SELECT id FROM %s WHERE %s = ?", table, column), item)
-    if err != nil {
-        log.Fatal(err)
-    }
-    defer rows.Close()
-    var id int
-    for rows.Next() {
-        err := rows.Scan(&id)
-        if err == sql.ErrNoRows {
-            fmt.Printf("\nError: %s\nItem: %s does not exist.\n", err, item)
-        }
-    }
-    if err := rows.Err(); err != nil {
-        log.Fatal(err)
-    }
-    return id
+	rows, err := db.Query(fmt.Sprintf("SELECT id FROM %s WHERE %s = ?", table, column), item)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer rows.Close()
+	var id int
+	for rows.Next() {
+		err := rows.Scan(&id)
+		if err == sql.ErrNoRows {
+			fmt.Printf("\nError: %s\nItem: %s does not exist.\n", err, item)
+		}
+	}
+	if err := rows.Err(); err != nil {
+		log.Fatal(err)
+	}
+	return id
 }
 
 func CheckErr(err error) {
@@ -60,7 +63,7 @@ func GenerateHash(prehash string) []byte {
 	data := []byte(prehash)
 	hasher.Write(data)
 	hashbytes := hasher.Sum(nil)
-	return hashbytes 
+	return hashbytes
 }
 
 func ConvertHashByteSliceToString(hashBytes []byte) string {
@@ -71,7 +74,7 @@ func CompareHash(hash1, hash2 []byte) bool {
 	if subtle.ConstantTimeCompare(hash1, hash2) == 1 {
 		fmt.Println(true)
 		return true
-	} 
+	}
 	fmt.Println(false)
 	return false
 }

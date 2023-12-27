@@ -3,6 +3,8 @@ package handlers
 import (
 	"log"
 	"strconv"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
 func ConvertStrToInt(f string) (int, error) {
@@ -21,4 +23,19 @@ func ConvertStrToFloat64(f string) (float64, error) {
 		return 0.0, err
 	}
 	return conversion, nil
+}
+
+// remove this
+type LoginForm struct {
+	Email          string `json:"email"`
+	Username       string `json:"username"`
+	HashedPassword string `json:"pasword"`
+}
+
+func HashString(s string, c int) (string, error) {
+	salt, err := bcrypt.GenerateFromPassword([]byte(s), c)
+	if err != nil {
+		return "", err
+	}
+	return string(salt), nil
 }

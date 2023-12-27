@@ -32,11 +32,26 @@ type User struct {
 	Username       string `json:"username" db:"username"`
 	PassHash       string `json:"passhash" db:"passhash"`
 	ClearanceLevel string
-	ClearanceID    int    `json:"clearance" db:"clearance"`
+	ClearanceID    int    `json:"clearance" db:"clearance_level"`
 	SessionID      string `json:"session_id" db:"session_id"`
 }
 
-// not done
+// not quite done ...
+func LoadUser(db *sql.DB, email string) (User, error) {
+	var u User
+	err := db.QueryRow("SELECT id, email, username, passhash, clearance_level, session_id FROM users WHERE email = ?",
+		email,
+	).Scan(&u.ID, &u.Email, &u.Username, &u.PassHash, &u.ClearanceID, &u.SessionID)
+	if err == sql.ErrNoRows {
+		// doesnt exist
+		return u, nil
+	} else if err != nil {
+		// err in query
+		return u, err
+	}
+	return u, nil
+}
+
 func (u User) InsertUser(db *sql.DB) {
 	var execute bool
 	var err error
@@ -49,10 +64,12 @@ func (u User) InsertUser(db *sql.DB) {
 	// remember, the check existing returns true if the category already exists, so it skips
 	switch execute {
 	case false:
+		if u.ClearanceID == 0 {
+			u.ClearanceID = data.FindDatabaseID(db, "clearance", "clearance_level", u.ClearanceLevel)
+		}
 		_, err := db.Exec(
 			"INSERT INTO users (email, username, password_hash, clearance_level) VALUES (?,?,?,?)",
-			u.Email, u.Username, u.PassHash,
-			data.FindDatabaseID(db, "clearance", "clearance_level", u.ClearanceLevel),
+			u.Email, u.Username, u.PassHash, u.ClearanceID,
 		)
 		if err != nil {
 			log.Fatal(err)
@@ -66,7 +83,26 @@ func (u User) InsertUser(db *sql.DB) {
 func (u User) UpdateUserInformation(db *sql.DB) {}
 
 // not done
-func (u User) VerifyCredentials(db *sql.DB) bool { return false }
+func (u User) VerifyCredentials(db *sql.DB, f LoginForm) bool { return false }
+
+func VerifyCredentials(db *sql.DB, email, pass string) (User, error) {
+	var u User
+	var exists bool
+	exists, err := data.CheckExistence(db, "users", "email", email)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if exists {
+		// compare hash
+
+		// load user
+	} else {
+		// it doesnt exist
+		return u, nil
+	}
+
+	return u, nil
+}
 
 // not done
 func CreateToken(sessionID, username string) {}
