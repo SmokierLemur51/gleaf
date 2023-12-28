@@ -11,11 +11,16 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
-// not done, does db.Prepare protect against the risk of sql injection that fmt.Sprintf creates?
+// just need to fix err handling
 func CheckExistence(db *sql.DB, table, column, item string) (bool, error) {
 	// returns true if it exists
 	var count int
-	rows, err := db.Query(fmt.Sprintf("SELECT COUNT(*) FROM %s WHERE %s = ?", table, column), item)
+	stmt, err := db.Prepare(fmt.Sprintf("SELECT COUNT(*) FROM %s WHERE %s = ?", table, column))
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer stmt.Close()
+	rows, err := stmt.Query(item)
 	if err != nil {
 		return true, err
 	}
@@ -29,12 +34,17 @@ func CheckExistence(db *sql.DB, table, column, item string) (bool, error) {
 		return true, err
 	}
 	// if not
+
 	return false, nil
 }
 
 // not done needs to also return error
 func FindDatabaseID(db *sql.DB, table, column, item string) int {
-	rows, err := db.Query(fmt.Sprintf("SELECT id FROM %s WHERE %s = ?", table, column), item)
+	stmt, err := db.Prepare(fmt.Sprintf("SELECT id FROM %s WHERE %s = ?", table, column))
+	if err != nil {
+		log.Fatal(err)
+	}
+	rows, err := stmt.Query(item)
 	if err != nil {
 		log.Fatal(err)
 	}

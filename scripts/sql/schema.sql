@@ -30,13 +30,14 @@ create table users (
 create table service_categories (
     id integer primary key autoincrement,
     category varchar(100),
-    description text
+    admin_information text,
+    public_information text
 );
 
 create table statuses (
     id integer primary key autoincrement,
-    status varchar(75),
-    description text
+    status_title varchar(75),
+    admin_information text
 );
 
 create table services (

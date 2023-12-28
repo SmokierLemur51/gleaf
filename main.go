@@ -24,6 +24,9 @@ func main() {
 	c.ConnectDatabase("sqlite3", "instance/testing.db")
 	c.RegisterRoutes(r)
 
+	u := handlers.User{Email: "ldl6147@gmail.com"}
+	u.InsertUser(c.DB)
+
 	log.Println("Starting server on port ", PORT)
 	log.Fatal(http.ListenAndServe(PORT, r))
 }
