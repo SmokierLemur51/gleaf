@@ -6,8 +6,8 @@ import (
 	"net/http"
 
 	"github.com/SmokierLemur51/gleaf/data"
-
 	"github.com/go-chi/chi/v5"
+	_ "github.com/mattn/go-sqlite3"
 	// "github.com/go-chi/jwtauth/v5"
 )
 

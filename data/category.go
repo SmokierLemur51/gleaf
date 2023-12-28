@@ -83,3 +83,5 @@ func LoadAllCategories(db *sql.DB) ([]ServiceCategory, error) {
 
 	return cats, nil
 }
+
+func LoadCategory(db *sql.DB) (ServiceCategory, error) { var c ServiceCategory; return c, nil }
