@@ -39,6 +39,3 @@ insert into service_categories (category, admin_information, public_information)
 insert into service_categories (category, admin_information, public_information) values 
 ('Commercial', 'Office, warehouse, or moving company bookings. Etc...', 
 "Commercial cleaning solutions, contact us to get a free estimate.");
-
-
--- services

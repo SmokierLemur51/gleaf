@@ -18,6 +18,7 @@ create table clearance (
     c_description text
 );
 
+-- need a table for customers and administrative
 create table users (
     id integer primary key autoincrement,
     email varchar(120) unique not null,
