@@ -39,14 +39,14 @@ func CheckExistence(db *sql.DB, table, column, item string) (bool, error) {
 }
 
 // not done needs to also return error
-func FindDatabaseID(db *sql.DB, table, column, item string) int {
+func FindDatabaseID(db *sql.DB, table, column, item string) (int, error) {
 	stmt, err := db.Prepare(fmt.Sprintf("SELECT id FROM %s WHERE %s = ?", table, column))
 	if err != nil {
-		log.Fatal(err)
+		return 0, err
 	}
 	rows, err := stmt.Query(item)
 	if err != nil {
-		log.Fatal(err)
+		return 0, err
 	}
 	defer rows.Close()
 	var id int
@@ -57,9 +57,9 @@ func FindDatabaseID(db *sql.DB, table, column, item string) int {
 		}
 	}
 	if err := rows.Err(); err != nil {
-		log.Fatal(err)
+		return 0, err
 	}
-	return id
+	return id, nil
 }
 
 func CheckErr(err error) {

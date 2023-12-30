@@ -28,6 +28,7 @@ type ServiceCategory struct {
 	PublicInformation string `json:"publicInformation" db:"public_information"`
 }
 
+// add error return
 func (s *ServiceCategory) InsertCategory(db *sql.DB) {
 	var execute bool
 	var err error
@@ -36,7 +37,7 @@ func (s *ServiceCategory) InsertCategory(db *sql.DB) {
 		log.Println(err)
 		return
 	}
-	// remember, the check existing returns true if the product already exists, so it skips
+	// if true, it exists and therefore no insertion
 	switch execute {
 	case false:
 		_, err := db.Exec(
@@ -51,9 +52,28 @@ func (s *ServiceCategory) InsertCategory(db *sql.DB) {
 	}
 }
 
-func (s *ServiceCategory) UpdateServiceCategory(db *sql.DB, category, adminInfo, publicInfo string) error {
-	// check and make sure the original struct already
+func UpdateCategoryStruct(cat *ServiceCategory, newCategory, newAdminInfo, newPublicInfo string) *ServiceCategory {
+	cat.Category = newCategory
+	cat.AdminInformation = newAdminInfo
+	cat.PublicInformation = newPublicInfo
+	return cat
+}
 
+func (s ServiceCategory) UpdateServiceCategory(db *sql.DB) error {
+	// check and make sure the original struct already
+	stmt, err := db.Prepare("UPDATE service_categories SET category = ?, admin_information = ?, public_information = ? WHERE id = ?")
+	if err != nil {
+		log.Printf("Error '%v' in UpdateServiceCategory method, db.Prepare stmt. \n", err)
+		return err
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec(s.Category, s.AdminInformation, s.PublicInformation, s.ID)
+	if err != nil {
+		log.Printf("Error '%v' in UpdateServiceCat method, stmt.Exec.", err)
+		return err
+	}
+
+	log.Printf("Successfully updated Category: %s", s.Category)
 	return nil
 }
 
@@ -63,7 +83,8 @@ func LoadAllCategories(db *sql.DB) ([]ServiceCategory, error) {
 
 	rows, err := db.Query("SELECT * FROM service_categories")
 	if err != nil {
-		log.Fatal(err)
+		log.Printf("Error: '%v' in 'LoadAllCategories()' query\n", err)
+		return []ServiceCategory{}, err
 	}
 	defer rows.Close()
 	// iterate anc check for nil/NULL rows
@@ -71,7 +92,7 @@ func LoadAllCategories(db *sql.DB) ([]ServiceCategory, error) {
 		if err == sql.ErrNoRows {
 			// i dont think this is even in the correct spot
 			log.Println("No categories found during query")
-			return cats, nil
+			return []ServiceCategory{}, err
 		}
 		var c ServiceCategory
 		err := rows.Scan(&c.ID, &c.Category, &c.AdminInformation, &c.PublicInformation)
@@ -84,4 +105,17 @@ func LoadAllCategories(db *sql.DB) ([]ServiceCategory, error) {
 	return cats, nil
 }
 
-func LoadCategory(db *sql.DB) (ServiceCategory, error) { var c ServiceCategory; return c, nil }
+func LoadCategory(db *sql.DB, category string) (ServiceCategory, error) {
+	var c ServiceCategory
+	id, err := FindDatabaseID(db, "service_categories", "category", category)
+	if err != nil {
+		return c, err
+	}
+	// next two lines are part of one db.QueryRow statement, wanted to spread it out some
+	if err := db.QueryRow("SELECT id, category, admin_information, public_information FROM service_categories WHERE id = ?",
+		id).Scan(&c.ID, &c.Category, &c.AdminInformation, &c.PublicInformation); err != nil {
+		return ServiceCategory{}, err
+	}
+	// return the single category
+	return c, nil
+}

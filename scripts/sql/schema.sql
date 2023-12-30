@@ -45,8 +45,8 @@ create table services (
     id integer primary key autoincrement,
     category_id integer,
     status_id integer,
-    _service varchar(100),
-    _description text, 
+    service_name varchar(100),
+    service_description text, 
     selling real,
     foreign key (category_id) references service_categries(id),
     foreign key (status_id) references status(id)

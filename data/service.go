@@ -24,36 +24,16 @@ import (
 
 // status 1 active, status 2 inactive
 type Service struct {
-	Id          int `json:"id" db:"id"`
-	CategoryId  int `json:"category_id" db:"category_id"`
-	Category    ServiceCategory
+	Id          int     `json:"id" db:"id"`
+	CategoryId  int     `json:"category_id" db:"category_id"`
 	Status      int     `json:"status_id" db:"status_id"`
-	Service     string  `json:"service" db:"_service"`
-	Description string  `json:"description" db:"_description"`
+	Service     string  `json:"service" db:"service_name"`
+	Description string  `json:"description" db:"service_description"`
 	Selling     float64 `json:"selling" db:"selling"`
+	Category    ServiceCategory
 }
 
 func CheckServiceFields(s *Service) (*Service, error) { return s, nil }
-
-func CheckExistingService(db *sql.DB, service string) (bool, error) {
-	// returns true if it exists
-	var count int
-	rows, err := db.Query("SELECT COUNT(*) FROM services WHERE service = ? ", service)
-	if err != nil {
-		return true, err
-	}
-	defer rows.Close()
-	for rows.Next() {
-		if err := rows.Scan(&count); err != nil {
-			return false, err
-		}
-	}
-	if count > 0 {
-		return true, err
-	}
-	// if not
-	return false, nil
-}
 
 func (s Service) InsertService(db *sql.DB) {
 	var execute bool
@@ -67,7 +47,7 @@ func (s Service) InsertService(db *sql.DB) {
 	switch execute {
 	case false:
 		_, err := db.Exec(
-			"INSERT INTO services (category_id, status_id, _service, _description, selling) VALUES (?,?,?,?,?)",
+			"INSERT INTO services (category_id, status_id, service_name, service_description, selling) VALUES (?,?,?,?,?)",
 			s.CategoryId, s.Status, s.Service, s.Description, s.Selling,
 		)
 		if err != nil {
@@ -78,9 +58,18 @@ func (s Service) InsertService(db *sql.DB) {
 	}
 }
 
-func (s *Service) UpdateSellingPrice(db *sql.DB, selling float64) {}
+func (s *Service) UpdateSellingPrice(db *sql.DB, newSelling float64) error { return nil }
 
-// General functions
+func (s *Service) LoadServiceByName(db *sql.DB, services string) error {
+	query := "SELECT id, category_id, status_id, service, description, selling FROM services WHERE service = ?"
+	if err := db.QueryRow(query).Scan(&s.Id, &s.CategoryId, &s.Status, &s.Service, &s.Description, &s.Selling); err != nil {
+		log.Printf("Err: %v", err)
+		return err
+	}
+	return nil
+}
+
+// converting this to the method above
 func LoadServiceByName(db *sql.DB, service string) (Service, error) {
 	rows, err := db.Query(
 		"SELECT id, category_id, status_id, service, description, selling FROM services WHERE service = ?",
@@ -142,4 +131,10 @@ func LoadServicesByStatus(db *sql.DB, status string) ([]Service, error) {
 //     return services, nil
 // }
 
-func PopulateServicesTable(db *sql.DB) error { return nil }
+func PopulateServicesTable(db *sql.DB, servs []Service) error {
+	for i, p := range servs {
+
+	}
+
+	return nil
+}
