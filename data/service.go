@@ -145,16 +145,21 @@ func PopulateServicesTable(db *sql.DB, servs []Service) error {
 func EarlyStageServiceSlice() []Service {
 
 	return []Service{
+		// moving
 		{Service: "Move In/Out Deep Cleanse", CategoryId: 1, Status: 1,
 			Description: "A deep cleanse of your home before or after you move out.", Selling: 275.00},
+		// residential
 		{Service: "Quick Clean", CategoryId: 2, Status: 1,
 			Description: "A quick cleaning of your house.", Selling: 150.00},
 		{Service: "Residential Deep Clean.", CategoryId: 2, Status: 1,
 			Description: "Deep clean of carpet, furniture, fridge and more.", Selling: 500.00},
 		{Service: "Carpet Cleaning", CategoryId: 2, Status: 5,
 			Description: "Remove stains, pet smells, and allergens from your carpet. A deep cleanse and shampooing.", Selling: 250.00},
-		{Service: "Office Cleaning", CategoryId: 6, Status: 1,
+		// commercial
+			{Service: "Office Cleaning", CategoryId: 6, Status: 1,
 			Description: "Make your office feel more like home. Stop wasting time cleaning it yourself!", Selling: 300.00},
-		{},
+		// residential exterior 3
+		{Service: "Gutter Cleaning", CategoryId: 3, Description: "Remove bird nests, leaves and sticks, or anything else that hinders the flow of water.", Selling: 300.00},
+		{Service: "Window Cleaning",CategoryId: ,Status: ,Description: , Selling: ,},
 	}
 }
