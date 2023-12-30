@@ -35,13 +35,13 @@ type Service struct {
 
 func CheckServiceFields(s *Service) (*Service, error) { return s, nil }
 
-func (s Service) InsertService(db *sql.DB) {
+func (s Service) InsertService(db *sql.DB) error {
 	var execute bool
 	var err error
 	execute, err = CheckExistence(db, "services", "service", s.Service)
 	if err != nil {
 		log.Println(err)
-		return
+		return err
 	}
 	// remember, the check existing returns true if the product already exists, so it skips
 	switch execute {
@@ -51,11 +51,12 @@ func (s Service) InsertService(db *sql.DB) {
 			s.CategoryId, s.Status, s.Service, s.Description, s.Selling,
 		)
 		if err != nil {
-			log.Fatal(err)
+			return err
 		}
 	case true:
 		fmt.Printf("Service %s already exists.\n", s.Service)
 	}
+	return nil
 }
 
 func (s *Service) UpdateSellingPrice(db *sql.DB, newSelling float64) error { return nil }
@@ -132,9 +133,18 @@ func LoadServicesByStatus(db *sql.DB, status string) ([]Service, error) {
 // }
 
 func PopulateServicesTable(db *sql.DB, servs []Service) error {
-	for i, p := range servs {
-
+	for _, p := range servs {
+		if err := p.InsertService(db); err != nil {
+			log.Printf("Error with service %s:\t%v", p.Service, err)
+		}
 	}
 
 	return nil
+}
+
+func EarlyStageServiceSlice() []Service {
+
+	return []Service{
+		{},
+	}
 }

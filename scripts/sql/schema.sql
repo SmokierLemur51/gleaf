@@ -38,7 +38,7 @@ create table service_categories (
 create table statuses (
     id integer primary key autoincrement,
     status_title varchar(75),
-    admin_information text
+    admin_information varchar(250)
 );
 
 create table services (

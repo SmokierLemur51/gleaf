@@ -1,17 +1,19 @@
+-- this is for testing, not final
+
 -- statuses
 insert into statuses (status_title, admin_information) values 
 ('active', 'We are actively working to book these services.');
 
-insert into statuses (status_title, admin_information, public_information) values 
+insert into statuses (status_title, admin_information) values 
 ('seasonal', 'We promote these at specific times of the year, outside of those times they can be requested but are not displayed.');
 
-insert into statuses (status_title, admin_information, public_information) values 
+insert into statuses (status_title, admin_information) values 
 ('deactivated', 'Not currently offering these services.');
 
-insert into statuses (status_title, admin_information, public_information) values 
+insert into statuses (status_title, admin_information) values 
 ('group-only', 'These services can only be booked by groups, not individuals.');
 
-insert into statuses (status_title, admin_information, public_information) values 
+insert into statuses (status_title, admin_information) values 
 ('promotion', 'We are trying to promote these at a discount to drive sales.');
 
 
