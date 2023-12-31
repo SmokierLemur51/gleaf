@@ -1,5 +1,8 @@
-package models
+package data
 
+// this is all old as fuck
+
+/*
 type AdminPageData struct {
 	Page 				string
 	Title   			string
@@ -29,4 +32,4 @@ type MonthlyExpenses struct {
 }
 
 type Bookings struct {}
-
+*/
