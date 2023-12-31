@@ -12,6 +12,9 @@ drop table if exists groups;
 drop table if exists addresses;
 
 
+drop table if exists bookings;
+
+
 create table clearance (
     id integer primary key autoincrement,
     clearance_level varchar(60),
@@ -50,4 +53,19 @@ create table services (
     selling real,
     foreign key (category_id) references service_categries(id),
     foreign key (status_id) references status(id)
+);
+
+create table bookings (
+    id integer primary key autoincrement,
+    service_booked int,
+    selling real,
+    address_id int,
+    contact_id int,
+    booked_at timestamp not null default current_timestamp,
+    booked_for timestamp, -- can be empty if our schedule is too booked up
+    
+    foreign key (service_booked) references services(id),
+    foreign key (address_id) references addresses(id),
+    foreign key (contact_id) references contacts(id),
+
 );
