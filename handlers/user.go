@@ -48,7 +48,11 @@ func (u User) InsertUser(db *sql.DB) {
 	switch execute {
 	case false:
 		if u.ClearanceID == 0 {
-			u.ClearanceID = data.FindDatabaseID(db, "clearance", "clearance_level", u.ClearanceLevel)
+			var err error
+			u.ClearanceID, err = data.FindDatabaseID(db, "clearance", "clearance_level", u.ClearanceLevel)
+			if err != nil {
+				log.Printf("Error: %v", err)
+			}
 		}
 		_, err := db.Exec(
 			"INSERT INTO users (email, username, password_hash, clearance_level) VALUES (?,?,?,?)",

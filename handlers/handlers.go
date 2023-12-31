@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"database/sql"
+	"fmt"
 	"log"
 	"net/http"
 
@@ -30,7 +31,7 @@ func (c *Controller) ConnectDatabase(database, file string) {
 
 func (c Controller) RegisterRoutes(r chi.Router) {
 	// test handler
-	r.Method(http.MethodGet, "/controller", c.TestHandler())
+	r.Method(http.MethodGet, "/testing", c.TestHandler())
 
 	// public routes
 	r.Method(http.MethodGet, "/", c.IndexHandler())
@@ -53,7 +54,17 @@ func (c Controller) TestHandler() http.HandlerFunc {
 
 func (c Controller) IndexHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		p := PublicPageData{Page: "index.html", Title: "Greenleaf Cleaning", CSS: CSS_URL, Services: []data.Service{}}
+		services, err := data.LoadServicesByStatus(c.DB, "active")
+		if err != nil {
+			log.Printf("Error: %v\r\n", err)
+		}
+
+		for _, s := range services {
+			fmt.Println(s.Service)
+		}
+
+		p := PublicPageData{Page: "index.html", Title: "Greenleaf Cleaning",
+			CSS: CSS_URL, Services: services}
 		p.RenderHTMLTemplate(w)
 	}
 }

@@ -38,7 +38,7 @@ func CheckServiceFields(s *Service) (*Service, error) { return s, nil }
 func (s Service) InsertService(db *sql.DB) error {
 	var execute bool
 	var err error
-	execute, err = CheckExistence(db, "services", "service", s.Service)
+	execute, err = CheckExistence(db, "services", "service_name", s.Service)
 	if err != nil {
 		log.Println(err)
 		return err
@@ -91,10 +91,14 @@ func LoadServiceByName(db *sql.DB, service string) (Service, error) {
 }
 
 func LoadServicesByStatus(db *sql.DB, status string) ([]Service, error) {
+	status_id, err := FindDatabaseID(db, "statuses", "status_title", status)
+	if err != nil {
+		log.Printf("Err: %v", err)
+	}
 	var services []Service
 	rows, err := db.Query(
-		"SELECT id, category_id, status_id, service, description, selling FROM services WHERE status_id = ?",
-		status,
+		"SELECT id, category_id, status_id, service_name, service_description, selling FROM services WHERE status_id = ?",
+		status_id,
 	)
 	if err != nil {
 		log.Println(err)
@@ -106,31 +110,33 @@ func LoadServicesByStatus(db *sql.DB, status string) ([]Service, error) {
 			log.Fatal(err)
 		}
 		services = append(services, s)
-		log.Printf("Added service: %s to %s slice.", s.Service, status)
 	}
 	return services, nil
 }
 
-// func LoadServicesByCategory(db *sql.DB, category string) ([]Service, error) {
-//     var services []Service
-//     rows, err := db.Query(
-//         "SELECT id, category_id, status_id, service, description, selling FROM services WHERE category_id = ?",
-//         FindCategoryId(db, category),
-//     )
-//     if err != nil {
-//         log.Fatal(err)
-//     }
-//     for rows.Next() {
-//         var s Service
-//         err := rows.Scan(&s.Id, &s.CategoryId, &s.Status, &s.Service, &s.Description, &s.Selling)
-//         if err != nil {
-//             log.Fatal(err)
-//         }
-//         services = append(services, s)
-//         log.Printf("Added service: %s to %s slice.", s.Service, category)
-//     }
-//     return services, nil
-// }
+func LoadServicesByCategory(db *sql.DB, category string) ([]Service, error) {
+	cat, err := FindDatabaseID(db, "service_categories", "category", category)
+	if err != nil {
+		log.Printf("Err: %v", err)
+		return []Service{}, err
+	}
+	var services []Service
+	rows, err := db.Query("SELECT id, category_id, status_id, service_name, service_description, selling FROM services WHERE category_id = ?", cat)
+	if err != nil {
+		log.Printf("Err: %v", err)
+		return []Service{}, err
+	}
+	for rows.Next() {
+		var s Service
+		err := rows.Scan(&s.Id, &s.CategoryId, &s.Status, &s.Service, &s.Description, &s.Selling)
+		if err != nil {
+			log.Printf("Error with service %s.\n%v", s.Service, err)
+			break
+		}
+		services = append(services, s)
+	}
+	return services, nil
+}
 
 func PopulateServicesTable(db *sql.DB, servs []Service) error {
 	for _, p := range servs {
@@ -143,7 +149,6 @@ func PopulateServicesTable(db *sql.DB, servs []Service) error {
 }
 
 func EarlyStageServiceSlice() []Service {
-
 	return []Service{
 		// moving
 		{Service: "Move In/Out Deep Cleanse", CategoryId: 1, Status: 1,
@@ -156,10 +161,14 @@ func EarlyStageServiceSlice() []Service {
 		{Service: "Carpet Cleaning", CategoryId: 2, Status: 5,
 			Description: "Remove stains, pet smells, and allergens from your carpet. A deep cleanse and shampooing.", Selling: 250.00},
 		// commercial
-			{Service: "Office Cleaning", CategoryId: 6, Status: 1,
+		{Service: "Office Cleaning", CategoryId: 6, Status: 1,
 			Description: "Make your office feel more like home. Stop wasting time cleaning it yourself!", Selling: 300.00},
 		// residential exterior 3
-		{Service: "Gutter Cleaning", CategoryId: 3, Description: "Remove bird nests, leaves and sticks, or anything else that hinders the flow of water.", Selling: 300.00},
-		{Service: "Window Cleaning",CategoryId: ,Status: ,Description: , Selling: ,},
+		{Service: "Gutter Cleaning", CategoryId: 3, Status: 1,
+			Description: "Remove bird nests, leaves and sticks, or anything else that hinders the flow of water.", Selling: 300.00},
+		{Service: "Window Cleaning", CategoryId: 3, Status: 1,
+			Description: "Interior and exterior cleaning of your windows.", Selling: 20.00},
+		{Service: "Leaf Removal", CategoryId: 3, Status: 1,
+			Description: "Take care of your lawn by removing those pesky leaves.", Selling: 200.00},
 	}
 }

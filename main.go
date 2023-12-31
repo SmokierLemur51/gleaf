@@ -10,6 +10,17 @@ import (
 	_ "github.com/mattn/go-sqlite3"
 )
 
+func init() {
+	example := make(map[string]string)
+	example["one"] = "value1"
+	example["two"] = "value2"
+	_, err := handlers.ParseFormFieldsForEmptyInput(example)
+	if err != nil {
+		log.Println(err)
+	}
+
+}
+
 func main() {
 	var PORT string = ":5000"
 	r := chi.NewRouter()
@@ -23,9 +34,6 @@ func main() {
 	c := handlers.Controller{}
 	c.ConnectDatabase("sqlite3", "instance/testing.db")
 	c.RegisterRoutes(r)
-
-	u := handlers.User{Email: "ldl6147@gmail.com"}
-	u.InsertUser(c.DB)
 
 	log.Println("Starting server on port ", PORT)
 	log.Fatal(http.ListenAndServe(PORT, r))
