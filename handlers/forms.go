@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"log"
 	"strconv"
 
@@ -45,10 +44,17 @@ func HashString(s string, c int) (string, error) {
 I need a func to parse the values of an html form to find out which ones are empty.
 This is going to be for when I am updating database items.
 */
-func ParseFormFieldsForEmptyInput(fields map[string]string) ([]string, error) {
-	// fields is a map of input fields
-	for f, v := range fields {
-		fmt.Printf("Field: %s, Value: %s", f, v)
-	}
-	return []string{}, nil
-}
+
+// func ParseFormFieldsForEmptyInput(fields map[string]string) ([]string, error) {
+// 	// fields is a map of input fields
+// 	var emptyFields, populatedFields []string
+
+// 	for f, v := range fields {
+// 		if v == "" {
+// 			emptyFields = append(emptyFields, f)
+// 		} else {
+// 			populatedFields[f] = v
+// 		}
+// 	}
+// 	return []string{}, nil
+// }

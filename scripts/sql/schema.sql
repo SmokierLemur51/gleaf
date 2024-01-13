@@ -1,5 +1,7 @@
 -- to run: sqlite3 <datebase.db> < data/scripts/script.sql
 
+drop table if exists estimate_status_codes;
+drop table if exists estimate_requests;
 drop table if exists service_categories; 
 drop table if exists statuses;
 drop table if exists services;
@@ -10,10 +12,24 @@ drop table if exists users;
 drop table if exists contact_requests;
 drop table if exists groups;
 drop table if exists addresses;
-
-
 drop table if exists bookings;
 
+-- 
+create table estimate_status_codes (
+    id integer primary key autoincrement,
+    _status varchar(50),
+    _description varchar(150)
+);
+
+create table estimate_requests (
+    id integer primary key autoincrement,
+    name varchar(60),
+    email varchar(80),
+    phone varchar(12),
+    _description varchar(500),
+    estimate_status_code integer,
+    foreign key (estimate_status_code) references estimate_status_codes(id)
+);
 
 create table clearance (
     id integer primary key autoincrement,
@@ -51,21 +67,7 @@ create table services (
     service_name varchar(100),
     service_description text, 
     selling real,
-    foreign key (category_id) references service_categries(id),
-    foreign key (status_id) references status(id)
+    foreign key (category_id) references service_categories(id),
+    foreign key (status_id) references statuses(id)
 );
 
-create table bookings (
-    id integer primary key autoincrement,
-    service_booked int,
-    selling real,
-    address_id int,
-    contact_id int,
-    booked_at timestamp not null default current_timestamp,
-    booked_for timestamp, -- can be empty if our schedule is too booked up
-    
-    foreign key (service_booked) references services(id),
-    foreign key (address_id) references addresses(id),
-    foreign key (contact_id) references contacts(id),
-
-);

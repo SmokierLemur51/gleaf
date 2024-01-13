@@ -148,7 +148,7 @@ func PopulateServicesTable(db *sql.DB, servs []Service) error {
 	return nil
 }
 
-func EarlyStageServiceSlice() []Service {
+func TestingServiceSlice() []Service {
 	return []Service{
 		// moving
 		{Service: "Move In/Out Deep Cleanse", CategoryId: 1, Status: 1,

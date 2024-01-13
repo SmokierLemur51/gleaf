@@ -2,11 +2,11 @@ package handlers
 
 import (
 	"database/sql"
-	"fmt"
 	"log"
 	"net/http"
 
 	"github.com/SmokierLemur51/gleaf/data"
+
 	"github.com/go-chi/chi/v5"
 	_ "github.com/mattn/go-sqlite3"
 	// "github.com/go-chi/jwtauth/v5"
@@ -39,6 +39,7 @@ func (c Controller) RegisterRoutes(r chi.Router) {
 	r.Method(http.MethodGet, "/login", c.LoginPageHandler())
 
 	// post methods
+	r.Method(http.MethodPost, "/request-estimate/", c.Process_RequestEstimate())
 	r.Method(http.MethodPost, "/register-user", c.RegisterNewUser())
 }
 
@@ -57,10 +58,6 @@ func (c Controller) IndexHandler() http.HandlerFunc {
 		services, err := data.LoadServicesByStatus(c.DB, "active")
 		if err != nil {
 			log.Printf("Error: %v\r\n", err)
-		}
-
-		for _, s := range services {
-			fmt.Println(s.Service)
 		}
 
 		p := PublicPageData{Page: "index.html", Title: "Greenleaf Cleaning",
@@ -105,5 +102,27 @@ func (c Controller) ProcessLogin() http.HandlerFunc {
 func (c Controller) RegisterNewUser() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		// create new user
+	}
+}
+
+func (c Controller) Process_RequestEstimate() http.HandlerFunc {
+
+	return func(w http.ResponseWriter, r *http.Request) {
+		if err := r.ParseForm(); err != nil {
+			log.Fatal(err)
+		}
+		est := data.EstimateRequest{
+			Name:        r.FormValue("name"),
+			Email:       r.FormValue("email"),
+			Phone:       r.FormValue("phone"),
+			Description: r.FormValue("description"),
+			StatusId:    1, // open is the default
+		}
+
+		if err := est.InsertEstimateRequest(c.DB); err != nil {
+			log.Println(err)
+		}
+
+		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 }

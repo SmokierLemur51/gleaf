@@ -7,9 +7,24 @@ import (
 	"encoding/base64"
 	"fmt"
 	"log"
+	"os/exec"
 
 	_ "github.com/mattn/go-sqlite3"
 )
+
+func ExecuteScript(database_type, database_path, script_path string) (string, error) {
+	// defer wg.Done()
+	cmd := exec.Command(database_type, database_path, "-init", script_path)
+	output, err := cmd.CombinedOutput()
+	if err != nil {
+		fmt.Println(err)
+		return "", err
+	}
+	if len(output) != 0 {
+		fmt.Printf("Script execution output:\n\t%s\n", string(output))
+	}
+	return fmt.Sprintf("Successfully executed script '%s' into '%s'.\n\n", script_path, database_path), nil
+}
 
 // just need to fix err handling
 func CheckExistence(db *sql.DB, table, column, item string) (bool, error) {
@@ -60,12 +75,6 @@ func FindDatabaseID(db *sql.DB, table, column, item string) (int, error) {
 		return 0, err
 	}
 	return id, nil
-}
-
-func CheckErr(err error) {
-	if err != nil {
-		panic(err)
-	}
 }
 
 func GenerateHash(prehash string) []byte {

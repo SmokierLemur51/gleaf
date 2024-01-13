@@ -1,5 +1,15 @@
 -- this is for testing, not final
 
+-- contact_request statuses
+insert into estimate_status_codes (_status, _description) values ('not contacted', 'not yet contacted, does not include leaving a message');
+insert into estimate_status_codes (_status, _description) values ('contacted', 'spoke with potiential customer, not scheduled or rejected');
+insert into estimate_status_codes (_status, _description) values ('accepted', 'spoke with customer, offer accepted and scheduled');
+insert into estimate_status_codes (_status, _description) values ('rejected', 'spoke with customer, was not interested in offer');
+
+-- estimate requests
+
+
+
 -- statuses
 insert into statuses (status_title, admin_information) values 
 ('active', 'We are actively working to book these services.');
