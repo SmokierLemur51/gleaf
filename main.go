@@ -7,7 +7,6 @@ import (
 	"github.com/SmokierLemur51/gleaf/handlers"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
-	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
@@ -21,7 +20,7 @@ func main() {
 	r.Handle("/static/*", http.StripPrefix("/static/", http.FileServer(http.Dir("./static"))))
 
 	c := handlers.Controller{}
-	c.ConnectDatabase("sqlite3", "instance/testing_v3.db")
+	c.ConnectDatabase("instance/testing_gorm_v1.db")
 	c.RegisterRoutes(r)
 
 	log.Println("Starting server on port ", PORT)

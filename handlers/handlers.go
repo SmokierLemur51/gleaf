@@ -1,15 +1,13 @@
 package handlers
 
 import (
-	"database/sql"
 	"log"
 	"net/http"
 
 	"github.com/SmokierLemur51/gleaf/data"
 
 	"github.com/go-chi/chi/v5"
-	_ "github.com/mattn/go-sqlite3"
-	// "github.com/go-chi/jwtauth/v5"
+	"gorm.io/driver/sqlite"
 )
 
 var (
@@ -18,15 +16,14 @@ var (
 )
 
 type Controller struct {
-	DB *sql.DB
+	DB *gorm.DB
 }
 
-func (c *Controller) ConnectDatabase(database, file string) {
+func (c *Controller) ConnectDatabase(databasFile string) {
 	var err error
-	if c.DB, err = sql.Open(database, file); err != nil {
-		log.Fatal(err)
+	if c.DB, err = gorm.Open(sqlite.Open(database), databaseFile); err != nil {
+		panic(err)
 	}
-	c.DB.Ping()
 }
 
 func (c Controller) RegisterRoutes(r chi.Router) {
