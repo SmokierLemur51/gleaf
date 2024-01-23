@@ -45,8 +45,7 @@
     </nav>
     </header>
 
-    <br>
-    <main style="height: 100vh;">
+    <main class="back-gradient h-100 mt-3">
       <div class="container-lg">
         <div class="row mb-5">
             <!-- Button trigger modal -->
@@ -93,28 +92,22 @@
             </div>
             
         </div>
-          <br><br><br><br>
-          <div class="container-fluid">
-              <div class="row mt-5">
+          <div class="container-fluid mt-3">
 
-                  <div class="col-md-9">
-                      <div class="container-fluid">
-                          {{ range .Services }}  
-                            <div class="card" style="width: 18rem;">
-                              <div class="card-body">
-                                <h5 class="card-title">{{ .Service }}</h5>
-                                <h6 class="card-subtitle mb-2 text-body-secondary">$ {{ .Selling }}</h6>
-                                <p class="card-text">{{ .Description }}</p>
-                                <a href="#" class="card-link">Group Booking</a>
-                                <a href="#" class="card-link">Schedule Cleaning</a>
-                              </div>
-                            </div>                                  
-                          {{ end }}
+                  <div class="row mt-4">
+                    {{ range .Services }}
+                      <div class="col-md-4 mt-3">
+                        <div class="card h-100" style="width: 18rem;">
+                          <div class="card-body">
+                            <h5 class="card-title">{{ .Service }}</h5>
+                            <h6 class="card-subtitle mb-2 text-body-secondary">$ {{ .Selling }}</h6>
+                            <p class="card-text">{{ .Description }}</p>
+                            <a href="#" class="card-link">Group Booking</a>
+                            <a href="#" class="card-link">Schedule Cleaning</a>
+                          </div>
+                        </div>   
                       </div>
-                  </div>
-
-                  <div class="col-md-3">
-                      <p>sidebar</p>
+                      {{ end }}
                   </div>
 
               </div>    

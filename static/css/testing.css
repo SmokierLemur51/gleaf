@@ -29,3 +29,7 @@
     font-family: "Arial", sans-serif;
     font-style: italic;
 }
+
+.back-gradient {
+	background: linear-gradient(to right, #dbe3d6,#A7CEAA)
+}
