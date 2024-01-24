@@ -1,3 +1,4 @@
+package data
 /*
 Things you can get from category.go
 
@@ -10,7 +11,7 @@ Category Type
 
 Functions
   - LoadAllCategories(db) -> Load all categories of course my dear
-*/
+
 package data
 
 import (
@@ -119,3 +120,4 @@ func LoadCategory(db *sql.DB, category string) (ServiceCategory, error) {
 	// return the single category
 	return c, nil
 }
+*/

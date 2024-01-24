@@ -1,3 +1,4 @@
+package data
 /*
 File: estimates.go
 
@@ -6,7 +7,7 @@ Status Codes:
 2 - Contacted
 3 - Converted
 4 - Rejected
-*/
+
 package data
 
 import (
@@ -40,3 +41,4 @@ func (e EstimateRequest) InsertEstimateRequest(db *sql.DB) error {
 func (e EstimateRequest) UpdateEstimateRequest(db *sql.DB) {
 
 }
+*/

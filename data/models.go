@@ -16,9 +16,9 @@ type StatusCode struct {
   StatDescription string
 }
 
-type ServicerviceCategory struct {
+type ServiceCategory struct {
   gorm.Model
-  StatusCode StatusCode 
+  Status_Code StatusCode 
   Category string 
   AdminInformation string
   PublicInformation string
@@ -26,8 +26,8 @@ type ServicerviceCategory struct {
 
 type Service struct {
   gorm.Model
-  StatusCode StatusCode
-  Category Category
+  Status_Code StatusCode
+  Category ServiceCategory
   Service string
   AdminDescription string
   PublicDescription string
@@ -58,7 +58,7 @@ type Address struct {
 
 type Client struct {
   gorm.Model
-  ClientScore ClientScore
+  Client_Score ClientScore
   Address Address // one to many? 
   Name string
   Email *string
@@ -68,15 +68,31 @@ type Client struct {
 type Group struct {
   gorm.Model
   SecretIdentity string // random string generated for endpoint string
+  URL string
   Name string
   Creator Client
   Clients []Client
 }
 
-type Estimate struct {}
+type Estimate struct {
+  gorm.Model
+}
 
-type GroupEstimate struct {}
+type GroupEstimate struct {
+  gorm.Model
+}
 
-type Booking struct {}
+type Booking struct {
+  gorm.Model
+}
 
-type GroupBooking struct {} 
+
+type GroupBooking struct {
+  // Should this be multiple bookings with a group foreign key
+  // or should it be a different entity all together?
+  gorm.Model
+}
+
+type ChristmasCardMailingList struct {
+  gorm.Model
+}

@@ -1,3 +1,4 @@
+package data
 /*
 Things you can get from service.go
 
@@ -11,7 +12,7 @@ Service Type
 Functions
 - CheckExistingService(db, service) -> Returns true if exists, false if not
 - CheckServiceFields(*Service) -> Check that required fields exist
-*/
+
 package data
 
 import (
@@ -172,3 +173,4 @@ func TestingServiceSlice() []Service {
 			Description: "Take care of your lawn by removing those pesky leaves.", Selling: 200.00},
 	}
 }
+*/

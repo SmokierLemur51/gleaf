@@ -7,7 +7,8 @@ import (
 	"github.com/SmokierLemur51/gleaf/data"
 
 	"github.com/go-chi/chi/v5"
-	"gorm.io/driver/sqlite"
+	"gorm.io/gorm"
+  "gorm.io/driver/sqlite"
 )
 
 var (
@@ -19,9 +20,9 @@ type Controller struct {
 	DB *gorm.DB
 }
 
-func (c *Controller) ConnectDatabase(databasFile string) {
+func (c *Controller) ConnectDatabase(databaseFile string) {
 	var err error
-	if c.DB, err = gorm.Open(sqlite.Open(database), databaseFile); err != nil {
+	if c.DB, err = gorm.Open(sqlite.Open(databaseFile), &gorm.Config{}); err != nil {
 		panic(err)
 	}
 }
