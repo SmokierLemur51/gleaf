@@ -6,20 +6,23 @@ import (
 )
 
 func CreateModels(db *gorm.DB) {
-  db.AutoMigrate(&data.StatusCode{})
-  db.AutoMigrate(&data.ServiceCategory{})
-  db.AutoMigrate(&data.Service{})
-  db.AutoMigrate(&data.ClientScore{})
-  db.AutoMigrate(&data.GroupScore{})
-  db.AutoMigrate(&data.Address{})
-  db.AutoMigrate(&data.Client{})
-  db.AutoMigrate(&data.Group{})
-  db.AutoMigrate(&data.Estimate{})
-  db.AutoMigrate(&data.GroupEstimate{})
-  db.AutoMigrate(&data.Booking{})
-  db.AutoMigrate(&data.GroupBooking{})
-  db.AutoMigrate(&data.ChristmasCardMailingList{})
+  db.AutoMigrate(
+    &data.StatusCode{}, 
+    &data.ServiceCategory{},
+    &data.Service{}, 
+    &data.ClientScore{},
+    &data.GroupScore{}, 
+    &data.Address{},
+    &data.Client{},
+    &data.Group{},
+    &data.Estimate{},
+    &data.GroupEstimate{},
+    &data.Booking{},
+    &data.GroupBooking{},
+    &data.ChristmasCardMailingList{},
+  )
 }
+  
 
 
 func PopulateStatusCodes() []data.StatusCode {

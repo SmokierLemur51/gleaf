@@ -53,10 +53,7 @@ func (c Controller) TestHandler() http.HandlerFunc {
 
 func (c Controller) IndexHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		services, err := data.LoadServicesByStatus(c.DB, "active")
-		if err != nil {
-			log.Printf("Error: %v\r\n", err)
-		}
+	  services := []data.Service{}	
 
 		p := PublicPageData{Page: "index.html", Title: "Greenleaf Cleaning",
 			CSS: CSS_URL, Services: services}
@@ -106,20 +103,7 @@ func (c Controller) RegisterNewUser() http.HandlerFunc {
 func (c Controller) Process_RequestEstimate() http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		if err := r.ParseForm(); err != nil {
-			log.Fatal(err)
-		}
-		est := data.EstimateRequest{
-			Name:        r.FormValue("name"),
-			Email:       r.FormValue("email"),
-			Phone:       r.FormValue("phone"),
-			Description: r.FormValue("description"),
-			StatusId:    1, // open is the default
-		}
-
-		if err := est.InsertEstimateRequest(c.DB); err != nil {
-			log.Println(err)
-		}
+		
 
 		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}

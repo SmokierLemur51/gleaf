@@ -5,7 +5,8 @@ import (
 	"net/http"
 
 	"github.com/SmokierLemur51/gleaf/handlers"
-	"github.com/SmokierLemur51/gleaf/tests"
+	"github.com/SmokierLemur51/gleaf/data"
+  
   "github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
@@ -24,7 +25,7 @@ func main() {
 	c.ConnectDatabase("instance/testing_gorm_v1.db")
 	c.RegisterRoutes(r)
   
-  tests.CreateModels(c.DB)
+  data.CreateModels(c.DB)
 
 	log.Println("Starting server on port ", PORT)
 	log.Fatal(http.ListenAndServe(PORT, r))

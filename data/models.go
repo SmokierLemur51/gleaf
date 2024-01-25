@@ -18,16 +18,20 @@ type StatusCode struct {
 
 type ServiceCategory struct {
   gorm.Model
-  Status_Code StatusCode 
+  StatusCodeID uint `gorm:"not null"`
+  Status_Code StatusCode `gorm:"foreignKey:StatusCodeID"`
   Category string 
   AdminInformation string
   PublicInformation string
+  Services []Service `gorm:"foreignKey:ServiceCategoryID"`
 }
 
 type Service struct {
   gorm.Model
-  Status_Code StatusCode
-  Category ServiceCategory
+  StatusCodeID uint `gorm:"not null"`
+  Status_Code StatusCode `gorm:"foreignKey:StatusCodeID"`
+  ServiceCategoryID uint `gorm:"not null"`
+  Category ServiceCategory `gorm:"foreignKey:ServiceCategoryID"`
   Service string
   AdminDescription string
   PublicDescription string
@@ -58,11 +62,26 @@ type Address struct {
 
 type Client struct {
   gorm.Model
-  Client_Score ClientScore
-  Address Address // one to many? 
+  ClientScoreID uint `gorm:"not null"`
+  Client_Score ClientScore `gorm:"foreignKey:ClientScoreID"`
+  AddressID uint `gorm:"not null"`
+  Address Address `gorm:"foreignKey:AddressID"` 
+  GroupID uint `gorm:"nullable"`
+  Group GroupInterface
   Name string
   Email *string
   Phone string
+}
+
+func (c *Client) IsGroup() bool {
+  if c.GroupID {
+    return true
+  }
+  return false
+}
+
+type GroupInterface interface {
+  IsGroup()
 }
 
 type Group struct {
@@ -70,8 +89,9 @@ type Group struct {
   SecretIdentity string // random string generated for endpoint string
   URL string
   Name string
-  Creator Client
-  Clients []Client
+  CreatorID uint `gorm:"not null"`
+  Creator Client `gorm:"foreignKey:CreatorID"`
+  Clients []Client `gorm:"foreignKey:GroupID"`
 }
 
 type Estimate struct {
@@ -95,4 +115,12 @@ type GroupBooking struct {
 
 type ChristmasCardMailingList struct {
   gorm.Model
+}
+
+func CreateModels(db *gorm.DB) {
+  db.AutoMigrate(
+    &StatusCode{}, &ServiceCategory{}, &Service{}, &ClientScore{}, &GroupScore{},
+    &Address{}, &Client{}, &Group{}, &Estimate{}, &GroupEstimate{}, 
+    &Booking{}, &GroupBooking{}, &ChristmasCardMailingList{},
+  )
 }
