@@ -3,7 +3,7 @@ package handlers
 import (
 	"net/http"
 	"html/template"
-	"github.com/SmokierLemur51/gleaf/data"
+	"github.com/SmokierLemur51/gleaf/models"
 )
 
 type PublicPageData struct {
@@ -11,7 +11,8 @@ type PublicPageData struct {
 	Title    string
 	Content  string
 	CSS      string
-	Services []data.Service
+  Cats     []models.ServiceCategory
+	Services []models.Service
 }
 
 var CSS_URL string = "/static/css/testing.css"

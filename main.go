@@ -5,8 +5,10 @@ import (
 	"net/http"
 
 	"github.com/SmokierLemur51/gleaf/handlers"
-	"github.com/SmokierLemur51/gleaf/data"
-  
+	"github.com/SmokierLemur51/gleaf/models"
+  //"github.com/SmokierLemur51/gleaf/tests"
+
+
   "github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 )
@@ -25,7 +27,14 @@ func main() {
 	c.ConnectDatabase("instance/testing_gorm_v1.db")
 	c.RegisterRoutes(r)
   
-  data.CreateModels(c.DB)
+  var cats []models.ServiceCategory 
+  result := c.DB.Find(&cats)
+  if result.Error != nil {
+    panic(result.Error)
+  }
+  for _, s := range cats {
+    log.Printf("Category: %s\n", s.Category)
+  }
 
 	log.Println("Starting server on port ", PORT)
 	log.Fatal(http.ListenAndServe(PORT, r))

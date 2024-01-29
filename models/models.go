@@ -1,17 +1,21 @@
-package data
+package models
 /*
 File: models.go
 Creator: Logan Lee @SmokierLemur51
 
 Gorm models defined here.
-
-package data
-
+*/
 import (
   "gorm.io/gorm"
 )
 
 type StatusCode struct {
+  gorm.Model
+  StatCode string 
+  StatDescription string
+}
+
+type BookingStatusCode struct {
   gorm.Model
   StatCode string 
   StatDescription string
@@ -68,21 +72,9 @@ type Client struct {
   AddressID uint `gorm:"not null"`
   Address Address `gorm:"foreignKey:AddressID"` 
   GroupID uint `gorm:"nullable"`
-  Group GroupInterface
   Name string
   Email *string
   Phone string
-}
-
-func (c *Client) IsGroup() bool {
-  if c.GroupID {
-    return true
-  }
-  return false
-}
-
-type GroupInterface interface {
-  IsGroup()
 }
 
 type Group struct {
@@ -125,4 +117,3 @@ func CreateModels(db *gorm.DB) {
     &Booking{}, &GroupBooking{}, &ChristmasCardMailingList{},
   )
 }
-*/

@@ -4,7 +4,7 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/SmokierLemur51/gleaf/data"
+	"github.com/SmokierLemur51/gleaf/models"
 
 	"github.com/go-chi/chi/v5"
 	"gorm.io/gorm"
@@ -53,7 +53,7 @@ func (c Controller) TestHandler() http.HandlerFunc {
 
 func (c Controller) IndexHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-	  services := []data.Service{}	
+	  services := []models.Service{}	
 
 		p := PublicPageData{Page: "index.html", Title: "Greenleaf Cleaning",
 			CSS: CSS_URL, Services: services}
@@ -63,7 +63,9 @@ func (c Controller) IndexHandler() http.HandlerFunc {
 
 func (c Controller) AboutHandler() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		p := PublicPageData{Page: "about.html", Title: "Greenleaf Cleaning", CSS: CSS_URL, Services: []data.Service{}}
+		p := PublicPageData{
+      Page: "about.html", Title: "Greenleaf Cleaning", 
+      CSS: CSS_URL, Services: []models.Service{}}
 		p.RenderHTMLTemplate(w)
 	}
 }
