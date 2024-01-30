@@ -2,7 +2,4 @@
 
 *Created by Logan Lee for Greenleaf Cleaning.*
 
-Built on the chi router, aiming for simplicity in a complex system.
-
-
-More documentation to come.
+Development stage for Greenleaf Cleaning web application.
